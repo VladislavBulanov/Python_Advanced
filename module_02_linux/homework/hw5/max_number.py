@@ -1,26 +1,22 @@
-"""
-Реализуйте endpoint, начинающийся с /max_number, в который можно передать список чисел, разделённых слешем /.
-Endpoint должен вернуть текст «Максимальное переданное число {number}»,
-где number — выделенное курсивом наибольшее из переданных чисел.
-
-Примеры:
-
-/max_number/10/2/9/1
-Максимальное число: 10
-
-/max_number/1/1/1/1/1/1/1/2
-Максимальное число: 2
-
-"""
-
 from flask import Flask
+
 
 app = Flask(__name__)
 
 
-@app.route("/max_number/...")
-def max_number():
-    ...
+@app.route("/max_number/<path:numbers>")
+def max_number(numbers: str) -> str:
+    """
+    The function receives string with numbers to compare (any quantity
+    but at least one) and returns message with the max one of them.
+    :param numbers: string with numbers to compare
+    """
+    try:
+        numbers_list = [int(number) for number in numbers.split('/')]
+        maximum_number = max(numbers_list)
+        return f'Максимальное число: {maximum_number}'
+    except ValueError:
+        return 'В URL передано не число.'
 
 
 if __name__ == "__main__":
