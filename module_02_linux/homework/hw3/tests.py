@@ -3,25 +3,21 @@ def decrypt(encryption: str) -> str:
     The function decrypts the source encrypted message.
     :param encryption: the source encrypted message to decrypt
     """
-    result = ''
-    symbol_index = 0
-    while symbol_index < len(encryption):
-        if encryption[symbol_index] == '.':
-            if symbol_index + 1 < len(encryption) and \
-                    encryption[symbol_index + 1] == '.':
-                if result:
-                    result = result[:-1]
-                symbol_index += 1
+    result = []
+    for symbol in encryption:
+        result.append(symbol)
 
-        else:
-            result += encryption[symbol_index]
+        if len(result) >= 2 and result[-1] == '.' and result[-2] == '.':
+            result.pop()
+            result.pop()
+            if result:
+                result.pop()
 
-        symbol_index += 1
-    return result
+    return ''.join(symbol for symbol in result if symbol != '.')
 
 
 if __name__ == '__main__':
-    test_cases = [
+    test_cases = (
         ('абра-кадабра.', 'абра-кадабра'),
         ('абраа..-кадабра', 'абра-кадабра'),
         ('абраа..-.кадабра', 'абра-кадабра'),
@@ -32,13 +28,13 @@ if __name__ == '__main__':
         ('1..2.3', '23'),
         ('.', ''),
         ('1.......................', '')
-    ]
+    )
 
     for index, (data, expected) in enumerate(test_cases, start=1):
-        decrypted = decrypt(data)
-        if decrypted == expected:
+        result = decrypt(data)
+        if result == expected:
             print(f'Test case {index}: Passed')
         else:
             print(f'Test case {index}: Failed')
             print(f'Expected: {expected}')
-            print(f'Actual: {decrypted}')
+            print(f'Actual: {result}')
