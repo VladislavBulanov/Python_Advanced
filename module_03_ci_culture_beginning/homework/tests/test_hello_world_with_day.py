@@ -15,14 +15,14 @@ class TestHelloWorldApp(unittest.TestCase):
         self.base_url = '/hello-world/'
 
     def test_can_get_correct_username(self) -> None:
-        """The function check if user can get correct response with username."""
+        """The function checks if user can get correct response with username."""
         username = 'username'
         response = self.app.get(self.base_url + username)
         response_text = response.data.decode()
         self.assertTrue(username in response_text)
 
     def test_cannot_pass_incorrect_username(self) -> None:
-        """The function check if we get response with warning
+        """The function checks if we get response with warning
         about incorrect username (for example username is two words)"""
         username = 'Хорошей среды'
         response = self.app.get(self.base_url + username)
@@ -31,7 +31,7 @@ class TestHelloWorldApp(unittest.TestCase):
 
     @freeze_time('2023-05-08')
     def test_can_get_correct_monday_response(self) -> None:
-        """The function check if user can get
+        """The function checks if user can get
         correct response if current weekday is monday."""
         username = 'username'
         response = self.app.get(self.base_url + username)
@@ -49,7 +49,7 @@ class TestHelloWorldApp(unittest.TestCase):
 
     @freeze_time('2023-05-10')
     def test_can_get_correct_wednesday_response(self) -> None:
-        """The function check if user can get
+        """The function checks if user can get
         correct response if current weekday is wednesday."""
         username = 'username'
         response = self.app.get(self.base_url + username)
@@ -58,7 +58,7 @@ class TestHelloWorldApp(unittest.TestCase):
 
     @freeze_time('2023-05-11')
     def test_can_get_correct_thursday_response(self) -> None:
-        """The function check if user can get
+        """The function checks if user can get
         correct response if current weekday is thursday."""
         username = 'username'
         response = self.app.get(self.base_url + username)
@@ -67,7 +67,7 @@ class TestHelloWorldApp(unittest.TestCase):
 
     @freeze_time('2023-05-12')
     def test_can_get_correct_friday_response(self) -> None:
-        """The function check if user can get
+        """The function checks if user can get
         correct response if current weekday is friday."""
         username = 'username'
         response = self.app.get(self.base_url + username)
@@ -76,7 +76,7 @@ class TestHelloWorldApp(unittest.TestCase):
 
     @freeze_time('2023-05-13')
     def test_can_get_correct_saturday_response(self) -> None:
-        """The function check if user can get
+        """The function checks if user can get
         correct response if current weekday is saturday."""
         username = 'username'
         response = self.app.get(self.base_url + username)
@@ -85,9 +85,13 @@ class TestHelloWorldApp(unittest.TestCase):
 
     @freeze_time('2023-05-14')
     def test_can_get_correct_sunday_response(self) -> None:
-        """The function check if user can get
+        """The function checks if user can get
         correct response if current weekday is sunday."""
         username = 'username'
         response = self.app.get(self.base_url + username)
         response_text = response.data.decode()
         self.assertTrue('воскресень' in response_text.lower())
+
+
+if __name__ == '__main__':
+    unittest.main()
