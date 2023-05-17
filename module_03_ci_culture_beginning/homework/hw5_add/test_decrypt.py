@@ -1,5 +1,6 @@
 import unittest
-from decrypt import decrypt
+
+from module_03_ci_culture_beginning.homework.hw5_add.decrypt import decrypt
 
 
 class TestDecryptionFunction(unittest.TestCase):
