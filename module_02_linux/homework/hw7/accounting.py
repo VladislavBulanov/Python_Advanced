@@ -31,9 +31,12 @@ def add(date: str, number: int) -> str:
         year = date[0:4]
         month = date[5] if date[4] == '0' else date[4:6]
         day = date[7] if date[6] == '0' else date[6:]
-        storage.setdefault(year, dict(total=0)).setdefault(month, dict(total=0)).setdefault(day, 0)
+        storage.setdefault(year, dict()).setdefault(month, dict())
+        storage[year][month].setdefault(day, 0)
         storage[year][month][day] += number
+        storage[year][month].setdefault('total', 0)
         storage[year][month]['total'] += number
+        storage[year].setdefault('total', 0)
         storage[year]['total'] += number
         return 'Запись успешно сохранена в базе данных!'
 
