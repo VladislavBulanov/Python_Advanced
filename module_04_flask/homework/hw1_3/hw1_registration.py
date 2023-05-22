@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField
-from wtforms.validators import InputRequired, Email, NumberRange
+from wtforms.validators import InputRequired, Email
 from hw2_validators import number_length, NumberLength
 
 app = Flask(__name__)
@@ -14,11 +14,8 @@ class RegistrationForm(FlaskForm):
     ])
     phone = IntegerField(validators=[
         InputRequired("The field 'phone' is required"),
-        NumberRange(
-            min=1000000000,
-            max=9999999999,
-            message="The phone number must consist of ten digits",
-        ),
+        number_length(10, 10, "The phone number must consist of ten digits"),
+        # NumberLength(10, 10, "The phone number must consist of ten digits"),
     ])
     name = StringField(validators=[
         InputRequired("The field 'name' is required"),
