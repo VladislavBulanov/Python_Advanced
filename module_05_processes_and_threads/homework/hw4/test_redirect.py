@@ -8,7 +8,7 @@ class RedirectTestCase(unittest.TestCase):
     """The class for testing threads' redirect program."""
 
     def test_redirect_stdout_only(self):
-        # Redirect stdout only, stderr remains unchanged
+        """The function redirects stdout only, stderr remains unchanged."""
 
         original_stderr = sys.stderr
         output = StringIO()
@@ -19,7 +19,7 @@ class RedirectTestCase(unittest.TestCase):
         self.assertEqual(sys.stderr, original_stderr)
 
     def test_redirect_stderr_only(self):
-        # Redirect stderr only, stdout remains unchanged
+        """The function redirects stderr only, stdout remains unchanged."""
 
         original_stdout = sys.stdout
         output = StringIO()
@@ -30,7 +30,7 @@ class RedirectTestCase(unittest.TestCase):
         self.assertIn('Exception: Hello stderr', output.getvalue().strip())
 
     def test_both_redirected(self):
-        # Redirect stdout and stderr to separate StringIO objects
+        """The function redirects both stdout and stderr."""
 
         stdout_output = StringIO()
         stderr_output = StringIO()
@@ -43,7 +43,7 @@ class RedirectTestCase(unittest.TestCase):
         )
 
     def test_no_redirect(self):
-        # No redirection
+        """The function redirects neither stdout and stderr."""
 
         original_stdout = sys.stdout
         original_stderr = sys.stderr
@@ -57,6 +57,6 @@ class RedirectTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    with open('test_results.txt', 'w') as test_file_stream:
+    with open('test_results.txt', 'a') as test_file_stream:
         runner = unittest.TextTestRunner(stream=test_file_stream)
         unittest.main(testRunner=runner)

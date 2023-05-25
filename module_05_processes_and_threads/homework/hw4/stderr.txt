@@ -1,4 +1,4 @@
 Traceback (most recent call last):
-  File "C:\python_projects\skillbox\python_advanced\module_05_processes_and_threads\homework\hw4\redirect.py", line 57, in <module>
+  File "/home/vladi/python_projects/skillbox/python_advanced/module_05_processes_and_threads/homework/hw4/redirect.py", line 57, in <module>
     raise Exception('Hello stderr.txt')
 Exception: Hello stderr.txt
