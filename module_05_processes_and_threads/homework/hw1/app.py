@@ -1,15 +1,7 @@
-"""
-Консольная утилита lsof (List Open Files) выводит информацию о том, какие файлы используют какие-либо процессы.
-Эта команда может рассказать много интересного, так как в Unix-подобных системах всё является файлом.
-
-Но нам пока нужна лишь одна из её возможностей.
-Запуск lsof -i :port выдаст список процессов, занимающих введённый порт.
-Например, lsof -i :5000.
-
-Как мы с вами выяснили, наш сервер отказывается запускаться, если кто-то занял его порт. Напишите функцию,
-которая на вход принимает порт и запускает по нему сервер. Если порт будет занят,
-она должна найти процесс по этому порту, завершить его и попытаться запустить сервер ещё раз.
-"""
+import os
+import signal
+import subprocess
+from shlex import quote
 from typing import List
 
 from flask import Flask
@@ -19,33 +11,45 @@ app = Flask(__name__)
 
 def get_pids(port: int) -> List[int]:
     """
-    Возвращает список PID процессов, занимающих переданный порт
-    @param port: порт
-    @return: список PID процессов, занимающих порт
+    The function returns a list of PIDs of processes
+    occupying the specified port.
+    :param port: specified port
     """
+
     if not isinstance(port, int):
         raise ValueError
 
     pids: List[int] = []
-    ...
+    try:
+        command: List[str] = ["lsof", "-t", "-i" f":{port}"]
+        clear_command = [quote(element) for element in command]
+        output = subprocess.check_output(clear_command)
+        pids = [int(pid) for pid in output.decode().split("\n") if pid]
+    except subprocess.CalledProcessError:
+        pass
+
     return pids
 
 
 def free_port(port: int) -> None:
     """
-    Завершает процессы, занимающие переданный порт
-    @param port: порт
+    The function terminates specified busy port.
+    :param port: busy port
     """
+
     pids: List[int] = get_pids(port)
-    ...
+    for pid in pids:
+        os.kill(pid, signal.SIGTERM)
 
 
 def run(port: int) -> None:
     """
+    The function runs Flask app on the specified port.
+    If port is busy by some process the function terminates that process.
     Запускает flask-приложение по переданному порту.
-    Если порт занят каким-либо процессом, завершает его.
-    @param port: порт
+    :param port: specified port
     """
+
     free_port(port)
     app.run(port=port)
 
