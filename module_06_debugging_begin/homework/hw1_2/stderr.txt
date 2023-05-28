@@ -1,48 +1,12 @@
-18:14,111 password_checker INFO Вы пытаетесь аутентифицироваться в Skillbox
-18:14,111 password_checker INFO У вас есть 3 попыток
-18:14,325 password_checker WARNING Вы ввели слишком слабый пароль
-18:14,325 password_checker INFO У вас есть 2 попыток
-18:14,960 password_checker WARNING Вы ввели слишком слабый пароль
-18:14,960 password_checker INFO У вас есть 1 попыток
-18:14,540 password_checker WARNING Вы ввели слишком слабый пароль
-18:14,541 password_checker ERROR Пользователь трижды ввёл неправильный пароль!
-18:14:55,401 password_checker INFO Вы пытаетесь аутентифицироваться в Skillbox
-18:14:55,401 password_checker INFO У вас есть 3 попыток
-18:14:57,31 password_checker WARNING Вы ввели слишком слабый пароль
-18:14:57,31 password_checker INFO У вас есть 2 попыток
-18:14:57,428 password_checker WARNING Вы ввели слишком слабый пароль
-18:14:57,428 password_checker INFO У вас есть 1 попыток
-18:14:58,27 password_checker WARNING Вы ввели слишком слабый пароль
-18:14:58,27 password_checker ERROR Пользователь трижды ввёл неправильный пароль!
-18:18:02 password_checker INFO Вы пытаетесь аутентифицироваться в Skillbox
-18:18:02 password_checker INFO У вас есть 3 попыток
-18:18:03 password_checker WARNING Вы ввели слишком слабый пароль
-18:18:03 password_checker INFO У вас есть 2 попыток
-18:18:04 password_checker WARNING Вы ввели слишком слабый пароль
-18:18:04 password_checker INFO У вас есть 1 попыток
-18:18:04 password_checker WARNING Вы ввели слишком слабый пароль
-18:18:04 password_checker ERROR Пользователь трижды ввёл неправильный пароль!
-18:32:10	password_checker	INFO	Вы пытаетесь аутентифицироваться в Skillbox
-18:32:10	password_checker	INFO	У вас есть 3 попыток
-18:32:11	password_checker	WARNING	Вы ввели слишком слабый пароль
-18:32:11	password_checker	INFO	У вас есть 2 попыток
-18:32:11	password_checker	WARNING	Вы ввели слишком слабый пароль
-18:32:11	password_checker	INFO	У вас есть 1 попыток
-18:32:12	password_checker	WARNING	Вы ввели слишком слабый пароль
-18:32:12	password_checker	ERROR	Пользователь трижды ввёл неправильный пароль!
-12:32:55	password_checker	INFO	Вы пытаетесь аутентифицироваться в Skillbox
-12:32:55	password_checker	INFO	У вас есть 3 попыток
-12:33:02	password_checker	WARNING	Вы ввели слишком слабый пароль
-12:33:02	password_checker	INFO	У вас есть 2 попыток
-12:33:03	password_checker	WARNING	Вы ввели слишком слабый пароль
-12:33:03	password_checker	INFO	У вас есть 1 попыток
-12:33:04	password_checker	WARNING	Вы ввели слишком слабый пароль
-12:33:04	password_checker	ERROR	Пользователь трижды ввёл неправильный пароль!
-12:33:23	password_checker	INFO	Вы пытаетесь аутентифицироваться в Skillbox
-12:33:23	password_checker	INFO	У вас есть 3 попыток
-12:33:26	password_checker	WARNING	Вы ввели слишком слабый пароль
-12:33:26	password_checker	INFO	У вас есть 2 попыток
-12:33:27	password_checker	WARNING	Вы ввели слишком слабый пароль
-12:33:27	password_checker	INFO	У вас есть 1 попыток
-12:33:27	password_checker	WARNING	Вы ввели слишком слабый пароль
-12:33:27	password_checker	ERROR	Пользователь трижды ввёл неправильный пароль!
+17:33:11	password_checker	INFO	Вы пытаетесь аутентифицироваться в Skillbox
+17:33:11	password_checker	INFO	У вас есть 3 попытки(-ок)
+17:33:16	password_checker	ERROR	Вы ввели некорректный символ 
+Traceback (most recent call last):
+  File "/home/vladi/python_projects/skillbox/python_advanced/module_06_debugging_begin/homework/hw1_2/authentication.py", line 54, in input_and_check_password
+    hasher.update(password.encode("latin-1"))
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 0-2: ordinal not in range(256)
+17:33:16	password_checker	INFO	У вас есть 2 попытки(-ок)
+17:33:28	password_checker	WARNING	Вы ввели слишком слабый пароль
+17:33:28	password_checker	INFO	У вас есть 1 попытки(-ок)
+17:33:41	password_checker	WARNING	Вы ввели слишком слабый пароль
+17:33:41	password_checker	ERROR	Пользователь трижды ввёл неправильный пароль!
