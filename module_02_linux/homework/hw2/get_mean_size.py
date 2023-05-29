@@ -14,7 +14,7 @@ def get_mean_size(ls_output: List[str]) -> Union[float, str]:
         try:
             total_sum = sum(float(line.split()[4])for line in ls_output)
             return round(total_sum / len(ls_output), 2)
-        except BaseException:
+        except Exception:
             return 'Что-то пошло не так...'
 
     return 'В данной директории нет файлов.'
