@@ -1,7 +1,7 @@
 import json
 import logging
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
 
 
@@ -76,8 +76,31 @@ def get_average_time_of_function_performing(filename='logs.log') -> float:
         with open(filename, 'r', encoding='utf-8') as file:
             logs = [json.loads(line) for line in file]
 
+        total_time = timedelta(0)
+        count = 0
+
+        for log in logs:
+            if log.get('message', "") == 'Enter measure_me':
+                enter_time = datetime.strptime(log['time'], "%Y-%m-%d %H:%M:%S,%f")
+
+                for leave_log in logs:
+                    if (leave_log.get('message', "") == 'Leave measure_me' and
+                        leave_log.get('time', "") > log['time']):
+
+                        leave_time = datetime.strptime(leave_log['time'], "%Y-%m-%d %H:%M:%S,%f")
+                        execution_time = leave_time - enter_time
+                        total_time += execution_time
+                        count += 1
+                        break
+
+        if count > 0:
+            avg_time = total_time / count
+            return avg_time.total_seconds()
+
     except FileNotFoundError:
         print("Source file doesn't exist")
+
+    return 0.0  # Returns 0 if no logs or no matching logs found
 
 
 if __name__ == "__main__":
@@ -95,4 +118,5 @@ if __name__ == "__main__":
         data_line = get_data_line(10 ** 3)
         measure_me(data_line)
 
-    print(get_average_time_of_function_performing())
+    average_time = round(get_average_time_of_function_performing(), 3)
+    print(f"The average time of function performing is {average_time} s.")
