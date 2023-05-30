@@ -77,21 +77,20 @@ def get_average_time_of_function_performing(filename='logs.log') -> float:
             logs = [json.loads(line) for line in file]
 
         total_time = timedelta(0)
+        enter_time = 0
+        leave_time = 0
         count = 0
 
         for log in logs:
-            if log.get('message', "") == 'Enter measure_me':
+            if log.get("message", "") == "Enter measure_me":
                 enter_time = datetime.strptime(log['time'], "%Y-%m-%d %H:%M:%S,%f")
+            elif log.get("message", "") == "Leave measure_me":
+                leave_time = datetime.strptime(log['time'], "%Y-%m-%d %H:%M:%S,%f")
 
-                for leave_log in logs:
-                    if (leave_log.get('message', "") == 'Leave measure_me' and
-                        leave_log.get('time', "") > log['time']):
-
-                        leave_time = datetime.strptime(leave_log['time'], "%Y-%m-%d %H:%M:%S,%f")
-                        execution_time = leave_time - enter_time
-                        total_time += execution_time
-                        count += 1
-                        break
+            if enter_time and leave_time:
+                total_time += leave_time - enter_time
+                count += 1
+                enter_time, leave_time = 0, 0
 
         if count > 0:
             avg_time = total_time / count
