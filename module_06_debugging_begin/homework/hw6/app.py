@@ -1,14 +1,7 @@
-"""
-Заменим сообщение "The requested URL was not found on the server" на что-то более информативное.
-Например, выведем список всех доступных страниц с возможностью перехода по ним.
+from flask import Flask, render_template
+from werkzeug.exceptions import NotFound
 
-Создайте Flask Error Handler, который при отсутствии запрашиваемой страницы будет выводить
-список всех доступных страниц на сайте с возможностью перехода на них.
-"""
-
-from flask import Flask
-
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 
 @app.route('/dogs')
@@ -29,6 +22,19 @@ def cat_page(cat_id: int):
 @app.route('/index')
 def index():
     return 'Главная страница'
+
+
+@app.errorhandler(404)
+def handle_page_not_found_exception(error: NotFound):
+    """The function handles page not found error
+    and shows to user existing pages."""
+
+    available_pages = [
+        str(rule) for rule in app.url_map.iter_rules()
+        if "GET" in rule.methods and "static" not in str(rule)
+    ]
+
+    return render_template('error_404.html', urls=available_pages), 404
 
 
 if __name__ == '__main__':
