@@ -1,23 +1,7 @@
-"""
-Помимо того чтобы логи писать, нужно их ещё и уметь читать,
-иначе мы будем как в известном анекдоте, писателями, а не читателями.
-
-Для вас мы написали простую функцию обхода binary tree по уровням.
-Также в репозитории есть файл с логами, написанными этой программой.
-
-Напишите функцию restore_tree, которая принимает на вход путь до файла с логами
-    и восстанавливать исходное BinaryTree.
-
-Функция должна возвращать корень восстановленного дерева
-
-def restore_tree(path_to_log_file: str) -> BinaryTreeNode:
-    pass
-
-Примечание: гарантируется, что все значения, хранящиеся в бинарном дереве уникальны
-"""
 import itertools
 import logging
 import random
+import re
 from collections import deque
 from dataclasses import dataclass
 from typing import Optional
@@ -71,7 +55,52 @@ def get_tree(max_depth: int, level: int = 1) -> Optional[BinaryTreeNode]:
 
 
 def restore_tree(path_to_log_file: str) -> BinaryTreeNode:
-    pass
+    """
+    The function receives path to source log file
+    and returns the binary tree root.
+    :param path_to_log_file: path to the source log file
+    """
+
+    # Step 1: Read the log file and extract visited node values:
+    with open(path_to_log_file, "r", encoding="utf-8") as file:
+        log_lines = file.readlines()
+
+    visited_nodes = []
+    for line in log_lines:
+        if "Visiting" in line:
+            node_val = int(re.findall(r"\d+", line)[0])
+            visited_nodes.append(node_val)
+
+    # Step 2: Create a dictionary of {node_value: node_object}
+    node_dict = {}
+
+    # Step 3: Create BinaryTreeNode objects for each visited node value
+    for node_val in visited_nodes:
+        node_object = BinaryTreeNode(val=node_val)
+        node_dict[node_val] = node_object
+
+    # Step 4: Link the nodes together based on relationships using the node_dict
+    for line in log_lines:
+        if "left is not empty" in line:
+            values_list = re.findall(r"\d+", line)
+            parent_val = int(values_list[0])
+            child_val = int(values_list[1])
+
+            parent_node = node_dict[parent_val]
+            child_node = node_dict[child_val]
+            parent_node.left = child_node
+
+        elif "right is not empty" in line:
+            values_list = re.findall(r"\d+", line)
+            parent_val = int(values_list[0])
+            child_val = int(values_list[1])
+
+            parent_node = node_dict[parent_val]
+            child_node = node_dict[child_val]
+            parent_node.right = child_node
+
+    # Step 5: Return the root node of the restored binary tree
+    return node_dict[visited_nodes[0]]
 
 
 if __name__ == "__main__":
@@ -83,3 +112,6 @@ if __name__ == "__main__":
 
     root = get_tree(7)
     walk(root)
+
+    restored_root = restore_tree("walk_log_4.txt")
+    print(restored_root)

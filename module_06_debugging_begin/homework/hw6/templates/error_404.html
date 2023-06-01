@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Страница не найдена</title>
+  </head>
+  <body>
+    <h1>Страница не найдена</h1>
+    <p>Выберите одну из доступных страниц:</p>
+    <ul>
+      {% for url in urls %}
+      <li><a href="{{ url }}">{{ url }}</a></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

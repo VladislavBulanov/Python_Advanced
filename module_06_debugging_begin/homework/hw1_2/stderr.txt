@@ -1,0 +1,12 @@
+17:33:11	password_checker	INFO	Вы пытаетесь аутентифицироваться в Skillbox
+17:33:11	password_checker	INFO	У вас есть 3 попытки(-ок)
+17:33:16	password_checker	ERROR	Вы ввели некорректный символ 
+Traceback (most recent call last):
+  File "/home/vladi/python_projects/skillbox/python_advanced/module_06_debugging_begin/homework/hw1_2/authentication.py", line 54, in input_and_check_password
+    hasher.update(password.encode("latin-1"))
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 0-2: ordinal not in range(256)
+17:33:16	password_checker	INFO	У вас есть 2 попытки(-ок)
+17:33:28	password_checker	WARNING	Вы ввели слишком слабый пароль
+17:33:28	password_checker	INFO	У вас есть 1 попытки(-ок)
+17:33:41	password_checker	WARNING	Вы ввели слишком слабый пароль
+17:33:41	password_checker	ERROR	Пользователь трижды ввёл неправильный пароль!

@@ -1,39 +1,50 @@
-"""
-1. Сконфигурируйте логгер программы из темы 4 так, чтобы он:
-
-* писал логи в файл stderr.txt;
-* не писал дату, но писал время в формате HH:MM:SS,
-  где HH — часы, MM — минуты, SS — секунды с ведущими нулями.
-  Например, 16:00:09;
-* выводил логи уровня INFO и выше.
-
-2. К нам пришли сотрудники отдела безопасности и сказали, что, согласно новым стандартам безопасности,
-хорошим паролем считается такой пароль, который не содержит в себе слов английского языка,
-так что нужно доработать программу из предыдущей задачи.
-
-Напишите функцию is_strong_password, которая принимает на вход пароль в виде строки,
-а возвращает булево значение, которое показывает, является ли пароль хорошим по новым стандартам безопасности.
-"""
-
 import getpass
 import hashlib
 import logging
+import os
+from re import findall
+from typing import Set
+
 
 logger = logging.getLogger("password_checker")
 
+with open(os.path.abspath('/usr/share/dict/words'), 'r') as file:
+    word_list: Set[str] = {
+        word.strip().lower() for word in file if len(word.strip()) > 4
+    }
+
 
 def is_strong_password(password: str) -> bool:
+    """
+    The function checks if password is strong.
+    :param password: the password that user inputted
+    :return: True if password is strong, False if password is weak
+    """
+
+    password = password.lower()
+    words = findall(r'[a-zA-Z]{5,}', password)
+
+    for word in words:
+        if word in word_list:
+            return False
+
     return True
 
 
 def input_and_check_password() -> bool:
+    """
+    The function requests password from user and verifies it.
+    :return: True if password is valid, False if it doesn't
+    """
+
     logger.debug("Начало input_and_check_password")
-    password: str = getpass.getpass()
+    password: str = getpass.getpass("Enter password: ")
 
     if not password:
         logger.warning("Вы ввели пустой пароль.")
         return False
-    elif is_strong_password(password):
+
+    elif not is_strong_password(password):
         logger.warning("Вы ввели слишком слабый пароль")
         return False
 
@@ -44,22 +55,28 @@ def input_and_check_password() -> bool:
 
         if hasher.hexdigest() == "098f6bcd4621d373cade4e832627b4f6":
             return True
-    except ValueError as ex:
-        logger.exception("Вы ввели некорректный символ ", exc_info=ex)
+
+    except ValueError as error:
+        logger.exception("Вы ввели некорректный символ ", exc_info=error)
 
     return False
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(filename='stderr.txt',
+                        filemode='a',
+                        format='%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.INFO)
+
     logger.info("Вы пытаетесь аутентифицироваться в Skillbox")
     count_number: int = 3
-    logger.info(f"У вас есть {count_number} попыток")
 
     while count_number > 0:
+        logger.info(f"У вас есть {count_number} попытки(-ок)")
         if input_and_check_password():
             exit(0)
         count_number -= 1
 
-    logger.error("Пользователь трижды ввёл не правильный пароль!")
+    logger.error("Пользователь трижды ввёл неправильный пароль!")
     exit(1)
