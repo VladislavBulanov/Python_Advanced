@@ -1,5 +1,4 @@
 import sys
-
 from utils import string_to_operator
 
 
