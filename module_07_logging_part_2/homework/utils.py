@@ -3,7 +3,6 @@ from typing import Union, Callable
 from operator import sub, mul, truediv, add
 
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger("utils")
 
 OPERATORS = {
