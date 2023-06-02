@@ -40,4 +40,4 @@ def calc(args):
 
 if __name__ == '__main__':
     # calc(sys.argv[1:])
-    calc([5, "*", 9])
+    calc([5, "о", 9])

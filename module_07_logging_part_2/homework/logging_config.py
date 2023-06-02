@@ -1,6 +1,6 @@
 """A module for config logger."""
 
-# import logging  # for OOP config
+import logging  # for OOP config
 # import sys  # for OOP config
 #
 # from level_based_file_handler_class import LevelBasedFileHandler  # for OOP config
@@ -65,7 +65,7 @@ dict_config = {
             "formatter": "base",
             "stream": "ext://sys.stdout",
         },
-        "file": {
+        "files_by_levels": {
             "class": "level_based_file_handler_class.LevelBasedFileHandler",
             "level": "DEBUG",
             "formatter": "base",
@@ -75,15 +75,25 @@ dict_config = {
             "error_filename": "calc_error.log",
             "critical_filename": "calc_critical.log",
         },
+        "timed_rotating_file": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "level": "INFO",
+            "formatter": "base",
+            "filename": "utils.log",
+            "when": "H",
+            "interval": 10,
+            "backupCount": 5,
+        },
+
     },
     "loggers": {
         "app": {
             "level": "DEBUG",
-            "handlers": ["console", "file"],
+            "handlers": ["console", "files_by_levels"],
         },
         "utils": {
             "level": "DEBUG",
-            "handlers": ["console", "file"],
+            "handlers": ["console", "files_by_levels", "timed_rotating_file"],
         },
     },
 }
