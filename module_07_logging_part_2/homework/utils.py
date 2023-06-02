@@ -2,10 +2,11 @@ import logging
 from typing import Union, Callable
 from operator import sub, mul, truediv, add
 
-from logging_config import config_logger
+# from logging_config import config_logger  # for OOP config
 
 
-logger = config_logger(logging.getLogger("utils"))
+# logger = config_logger(logging.getLogger("utils"))  # for OOP config
+logger = logging.getLogger("utils")
 
 OPERATORS = {
     '+': add,

@@ -1,11 +1,14 @@
-import logging
+import logging.config
 import sys
 from utils import string_to_operator
 
-from logging_config import config_logger
+# from logging_config import config_logger  # for OOP config
+from logging_config import dict_config
 
 
-logger = config_logger(logging.getLogger("app"))
+# logger = config_logger(logging.getLogger("app"))  # for OOP config
+logger = logging.getLogger("app")
+logging.config.dictConfig(dict_config)
 
 
 def calc(args):
@@ -37,4 +40,4 @@ def calc(args):
 
 if __name__ == '__main__':
     # calc(sys.argv[1:])
-    calc([5, "J", 9])
+    calc([5, "*", 9])
