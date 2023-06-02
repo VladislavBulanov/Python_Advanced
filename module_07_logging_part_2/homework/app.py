@@ -2,29 +2,10 @@ import logging
 import sys
 from utils import string_to_operator
 
+from logging_config import config_logger
 
-logger = logging.getLogger("app")
 
-
-def config_logger() -> None:
-    """The function configures logger settings via logging.basicConfig()."""
-
-    logger.setLevel('DEBUG')
-    stream_handler = logging.StreamHandler(stream=sys.stdout)
-    formatter = logging.Formatter(
-        fmt="%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s",
-        datefmt='%H:%M:%S',
-    )
-    stream_handler.setFormatter(formatter)
-    logger.addHandler(stream_handler)
-
-    # # Or:
-    # logging.basicConfig(
-    #     level=logging.DEBUG,
-    #     stream=sys.stdout,
-    #     format="%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s",
-    #     datefmt='%H:%M:%S',
-    # )
+logger = config_logger(logging.getLogger("app"))
 
 
 def calc(args):
@@ -55,6 +36,5 @@ def calc(args):
 
 
 if __name__ == '__main__':
-    config_logger()
     # calc(sys.argv[1:])
-    calc([5, "*", 9])
+    calc([5, "J", 9])
