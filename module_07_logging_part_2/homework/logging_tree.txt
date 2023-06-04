@@ -1,0 +1,23 @@
+<--""
+   Level WARNING
+   |
+   o<--"app"
+   |   Level DEBUG
+   |   Handler Stream <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
+   |     Level DEBUG
+   |     Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
+   |   Handler <LevelBasedFileHandler (DEBUG)>
+   |     Level DEBUG
+   |     Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
+   |
+   o<--"utils"
+       Level DEBUG
+       Handler Stream <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
+         Level DEBUG
+         Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
+       Handler <LevelBasedFileHandler (DEBUG)>
+         Level DEBUG
+         Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
+       Handler TimedRotatingFile 'C:\\python_projects\\skillbox\\python_advanced\\module_07_logging_part_2\\homework\\utils.log' when='H' interval=36000 backupCount=5
+         Level INFO
+         Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'

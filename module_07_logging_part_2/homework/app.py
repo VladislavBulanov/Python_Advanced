@@ -1,4 +1,5 @@
 import logging.config
+import logging_tree
 import sys
 from utils import string_to_operator
 
@@ -38,6 +39,19 @@ def calc(args):
     logger.info(f"{num_1} {operator} {num_2} = {result}")
 
 
+def get_logging_tree() -> None:
+    """The function records logging tree in
+    txt-file using logging_tree library."""
+
+    with open('logging_tree.txt', 'w', encoding='utf-8') as file:
+        sys.stdout = file
+        logging_tree.printout()
+        sys.stdout = sys.__stdout__
+        # # Or:
+        # file.write(logging_tree.format.build_description())
+
+
 if __name__ == '__main__':
+    get_logging_tree()
     # calc(sys.argv[1:])
-    calc([5, "о", 9])
+    calc([5, "-", 9])
