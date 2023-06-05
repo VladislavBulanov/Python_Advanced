@@ -88,16 +88,28 @@ dict_config = {
             "interval": 10,
             "backupCount": 5,
         },
-
+        "log_receiver": {
+            "class": "logging.handlers.HTTPHandler",
+            "level": "DEBUG",
+            "formatter": "base",
+            "host": "localhost:5000",
+            "url": "/log_receiver",
+            "method": "POST"
+        },
     },
     "loggers": {
         "app": {
             "level": "DEBUG",
-            "handlers": ["console", "files_by_levels"],
+            "handlers": ["console", "files_by_levels", "log_receiver"],
         },
         "utils": {
             "level": "DEBUG",
-            "handlers": ["console", "files_by_levels", "timed_rotating_file"],
+            "handlers": [
+                "console",
+                "files_by_levels",
+                "timed_rotating_file",
+                "log_receiver",
+            ],
         },
     },
     "filters": {
