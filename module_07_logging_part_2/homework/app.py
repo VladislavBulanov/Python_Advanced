@@ -53,5 +53,4 @@ def get_logging_tree() -> None:
 
 if __name__ == '__main__':
     get_logging_tree()
-    # calc(sys.argv[1:])
-    calc([5, "-", 9])
+    calc(sys.argv[1:])
