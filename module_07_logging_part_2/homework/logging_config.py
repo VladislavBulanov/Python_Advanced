@@ -100,7 +100,7 @@ dict_config = {
     "loggers": {
         "app": {
             "level": "DEBUG",
-            "handlers": ["console", "files_by_levels", "log_receiver"],
+            "handlers": ["console", "files_by_levels"],
         },
         "utils": {
             "level": "DEBUG",
@@ -108,7 +108,6 @@ dict_config = {
                 "console",
                 "files_by_levels",
                 "timed_rotating_file",
-                "log_receiver",
             ],
         },
     },
