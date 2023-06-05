@@ -1,12 +1,13 @@
 """A module for config logger."""
 
-import logging  # for OOP config
+# import logging  # for OOP config
 # import sys  # for OOP config
+#
 #
 # from level_based_file_handler_class import LevelBasedFileHandler  # for OOP config
 #
 #
-# # Object-oriented programming configuration:
+# Object-oriented programming configuration:
 # def config_logger(src_logger: logging.Logger) -> logging.Logger:
 #     """
 #     The function receives source logger to configure
@@ -63,12 +64,14 @@ dict_config = {
             "class": "logging.StreamHandler",
             "level": "DEBUG",
             "formatter": "base",
+            "filters": ["ascii"],
             "stream": "ext://sys.stdout",
         },
         "files_by_levels": {
-            "class": "level_based_file_handler_class.LevelBasedFileHandler",
+            "()": "level_based_file_handler_class.LevelBasedFileHandler",
             "level": "DEBUG",
             "formatter": "base",
+            "filters": ["ascii"],
             "debug_filename": "calc_debug.log",
             "info_filename": "calc_info.log",
             "warning_filename": "calc_warning.log",
@@ -79,6 +82,7 @@ dict_config = {
             "class": "logging.handlers.TimedRotatingFileHandler",
             "level": "INFO",
             "formatter": "base",
+            "filters": ["ascii"],
             "filename": "utils.log",
             "when": "H",
             "interval": 10,
@@ -94,6 +98,11 @@ dict_config = {
         "utils": {
             "level": "DEBUG",
             "handlers": ["console", "files_by_levels", "timed_rotating_file"],
+        },
+    },
+    "filters": {
+        "ascii": {
+            "()": "ascii_filter.AsciiFilter"
         },
     },
 }
