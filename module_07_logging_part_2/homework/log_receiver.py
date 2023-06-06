@@ -1,27 +1,33 @@
-"""A module with Flask app which runs server for creating log receiver."""
+"""A module with Flask app which runs
+server for receiving and getting logs."""
 
-import logging.config
-from flask import Flask, request, jsonify
-
-from logging_config import dict_config
+import json
+from flask import Flask, request
+from typing import List
 
 
 app = Flask(__name__)
-logs = []
+_logs: List[dict] = []
 
 
-@app.route('/log_receiver', methods=['POST'])
-def receive_logs():
-    log = request.get_json()
-    logs.append(log)
-    return jsonify({'message': 'Log received'})
+@app.route('/receive_log', methods=['POST'])
+def receive_log():
+    """The function receive log and add him to list of logs."""
+
+    _logs.append(dict(request.form))
+    return 'The log was successfully registered', 200
 
 
-@app.route('/log_receiver', methods=['GET'])
-def get_logs():
-    return jsonify(logs)
+@app.route('/get_logs', methods=['GET'])
+def get_logs() -> str:
+    """The function allows the user to get registered logs."""
+
+    logs_list: list[str] = list(
+        map(lambda log: json.dumps(log, indent=4), _logs)
+    )
+    logs_text: str = '\n'.join(logs_list)
+    return f'<pre>{logs_text}</pre>'
 
 
 if __name__ == '__main__':
-    logging.config.dictConfig(dict_config)
-    app.run(debug=True)
+    app.run(host='127.0.0.1', port=3080, debug=True)

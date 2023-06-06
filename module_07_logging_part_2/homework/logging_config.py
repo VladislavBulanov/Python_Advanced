@@ -92,15 +92,15 @@ dict_config = {
             "class": "logging.handlers.HTTPHandler",
             "level": "DEBUG",
             "formatter": "base",
-            "host": "localhost:5000",
-            "url": "/log_receiver",
+            "host": "127.0.0.1:3080",
+            "url": "/receive_log",
             "method": "POST"
         },
     },
     "loggers": {
         "app": {
             "level": "DEBUG",
-            "handlers": ["console", "files_by_levels"],
+            "handlers": ["console", "files_by_levels", "log_receiver"],
         },
         "utils": {
             "level": "DEBUG",
@@ -108,6 +108,7 @@ dict_config = {
                 "console",
                 "files_by_levels",
                 "timed_rotating_file",
+                "log_receiver",
             ],
         },
     },
