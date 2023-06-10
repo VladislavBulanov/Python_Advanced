@@ -19,28 +19,13 @@ def index():
 
 
 @app.route("/static/<string:folder>/<path:path>")
-def send(folder, path):
+def send_static(folder, path):
     if folder == "js":
         return send_from_directory(js_directory, path)
     elif folder == "css":
         return send_from_directory(css_directory, path)
     elif folder == "images":
         return send_from_directory(images_directory, path)
-
-
-# @app.route("/js/<path:path>")
-# def send_js(path):
-#     return send_from_directory(js_directory, path)
-#
-#
-# @app.route("/css/<path:path>")
-# def send_css(path):
-#     return send_from_directory(css_directory, path)
-#
-#
-# @app.route("/images/<path:path>")
-# def send_images(path):
-#     return send_from_directory(images_directory, path)
 
 
 if __name__ == "__main__":
