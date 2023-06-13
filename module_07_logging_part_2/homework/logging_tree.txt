@@ -5,11 +5,11 @@
    |   Level DEBUG
    |   Handler Stream <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
    |     Level DEBUG
-   |     Filter <ascii_filter.AsciiFilter object at 0x7f868e246c80>
+   |     Filter <ascii_filter.AsciiFilter object at 0x7f033e74ac80>
    |     Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
    |   Handler <LevelBasedFileHandler (DEBUG)>
    |     Level DEBUG
-   |     Filter <ascii_filter.AsciiFilter object at 0x7f868e246c80>
+   |     Filter <ascii_filter.AsciiFilter object at 0x7f033e74ac80>
    |     Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
    |   Handler HTTP POST to http://127.0.0.1:3080//receive_log
    |     Level DEBUG
@@ -19,15 +19,15 @@
        Level DEBUG
        Handler Stream <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
          Level DEBUG
-         Filter <ascii_filter.AsciiFilter object at 0x7f868e246c80>
+         Filter <ascii_filter.AsciiFilter object at 0x7f033e74ac80>
          Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
        Handler <LevelBasedFileHandler (DEBUG)>
          Level DEBUG
-         Filter <ascii_filter.AsciiFilter object at 0x7f868e246c80>
+         Filter <ascii_filter.AsciiFilter object at 0x7f033e74ac80>
          Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
        Handler TimedRotatingFile '/home/vladi/python_projects/skillbox/python_advanced/module_07_logging_part_2/homework/utils.log' when='H' interval=36000 backupCount=5
          Level INFO
-         Filter <ascii_filter.AsciiFilter object at 0x7f868e246c80>
+         Filter <ascii_filter.AsciiFilter object at 0x7f033e74ac80>
          Formatter fmt='%(levelname)s | %(name)s | %(asctime)s | %(lineno)s | %(message)s' datefmt='%H:%M:%S'
        Handler HTTP POST to http://127.0.0.1:3080//receive_log
          Level DEBUG
