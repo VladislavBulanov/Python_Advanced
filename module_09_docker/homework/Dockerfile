@@ -4,8 +4,9 @@ RUN mkdir /app
 
 WORKDIR /app
 
-COPY . /app/
-
+COPY requirements.txt /app/
 RUN python -m pip install -r /app/requirements.txt
+
+COPY . /app/
 
 ENTRYPOINT ["python", "app.py"]
