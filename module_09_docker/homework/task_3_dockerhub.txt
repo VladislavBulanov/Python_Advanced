@@ -1,0 +1,1 @@
+https://hub.docker.com/repository/docker/vladi18/new_year_app/general
