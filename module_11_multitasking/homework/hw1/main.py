@@ -42,7 +42,7 @@ class Philosopher(threading.Thread):
 
 
 def main() -> None:
-    forks: List[threading.Lock] = [threading.Lock() for n in range(5)]
+    forks: List[threading.Lock] = [threading.Lock() for _ in range(5)]
     philosophers: List[Philosopher] = [
         Philosopher(forks[i % 5], forks[(i + 1) % 5])
         for i in range(5)
