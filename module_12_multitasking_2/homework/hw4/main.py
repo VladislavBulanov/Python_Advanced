@@ -25,9 +25,13 @@ def work_thread(number: int) -> None:
     print(f"Thread {number} finished")
 
 
-def write_logs() -> None:
-    """The function for writing logs to the file."""
+def write_logs(filename: str) -> None:
+    """
+    The function for writing logs to the file.
+    :param filename: the name of source log file
+    """
 
+    time.sleep(1)
     while not logs_queue.empty():
         timestamp = logs_queue.get()
         date = get_date_by_timestamp(timestamp)
@@ -49,7 +53,7 @@ def get_date_by_timestamp(src_timestamp: int) -> str:
 def main() -> None:
     """The main function of the app."""
 
-    writer_thread = threading.Thread(target=write_logs)
+    writer_thread = threading.Thread(target=write_logs, args=(log_file_name,))
     writer_thread.start()
 
     threads: List[threading.Thread] = []
