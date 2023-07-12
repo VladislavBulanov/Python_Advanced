@@ -1,73 +1,57 @@
-import requests
+import datetime
+import logging
 import threading
 import time
-from queue import Queue
-from typing import List
+from multiprocessing import Queue
+from typing import Optional
+
+import requests
+
+URL: str = 'http://127.0.0.1:8080/timestamp/{}'
+WORKERS_COUNT: int = 10
+WORKER_REQUESTS: int = 20
+
+queue: Queue = Queue(WORKERS_COUNT * WORKER_REQUESTS)
+data: dict[float, Optional[str]] = {}
 
 
-log_file_name: str = "logs.log"
-logs_queue: Queue = Queue()
-total_threads: int = 10
-thread_life_seconds: int = 20
+def get_date(timestamp: float) -> str:
+    return requests.get(URL.format(timestamp)).text
 
 
-def work_thread(number: int) -> None:
-    """
-    The function describes the work of the one thread.
-    :param number: the number of the thread
-    """
+class Worker(threading.Thread):
+    def run(self) -> None:
+        for _ in range(WORKER_REQUESTS):
+            timestamp: float = datetime.datetime.now().timestamp()
+            data[timestamp] = None
 
-    print(f"Thread {number} started")
-    for _ in range(thread_life_seconds):
-        current_timestamp = int(time.time())
-        logs_queue.put(current_timestamp)
-        time.sleep(1)
-    print(f"Thread {number} finished")
+            queue.put(timestamp)
+            date: str = get_date(timestamp)
+            data[timestamp] = date
 
-
-def write_logs(filename: str) -> None:
-    """
-    The function for writing logs to the file.
-    :param filename: the name of source log file
-    """
-
-    time.sleep(1)
-    while not logs_queue.empty():
-        timestamp = logs_queue.get()
-        date = get_date_by_timestamp(timestamp)
-        with open(log_file_name, "a", encoding="utf-8") as file:
-            file.write(f"{timestamp} {date}\n")
+            time.sleep(1)
 
 
-def get_date_by_timestamp(src_timestamp: int) -> str:
-    """
-    The function returns current date by specified timestamp.
-    :param src_timestamp: the current timestamp
-    """
+if __name__ == '__main__':
+    logging.basicConfig(
+        level='INFO',
+        filename='sorted_logs.log',
+        format='%(asctime)s | %(message)s'
+    )
 
-    url = f"http://127.0.0.1:8080/timestamp/{src_timestamp}"
-    response = requests.get(url).text
-    return response
+    threads: list[Worker] = []
 
-
-def main() -> None:
-    """The main function of the app."""
-
-    writer_thread = threading.Thread(target=write_logs, args=(log_file_name,))
-    writer_thread.start()
-
-    threads: List[threading.Thread] = []
-    for thread_number in range(1, total_threads + 1):
-        thread = threading.Thread(target=work_thread, args=(thread_number,))
+    for i in range(WORKERS_COUNT):
+        thread: Worker = Worker()
         thread.start()
         threads.append(thread)
         time.sleep(1)
 
+    for i in range(queue.qsize()):
+        timestamp: float = queue.get()
+        while data.get(timestamp) is None:
+            continue
+        logging.info(f'{timestamp} -- {data[timestamp]}')
+
     for thread in threads:
         thread.join()
-
-    writer_thread.join()
-
-
-if __name__ == "__main__":
-    main()
