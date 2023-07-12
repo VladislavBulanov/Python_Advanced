@@ -16,15 +16,6 @@ queue: Queue = Queue(WORKERS_COUNT * WORKER_REQUESTS)
 data: Dict[float, Optional[str]] = {}
 
 
-def get_date(timestamp: float) -> str:
-    """
-    The function returns date by specified timestamp.
-    :param timestamp: the source timestamp
-    """
-
-    return requests.get(URL.format(timestamp)).text
-
-
 class Worker(threading.Thread):
     """The child class of 'threading.Thread'
     class describing the one thread."""
@@ -39,6 +30,15 @@ class Worker(threading.Thread):
             data[timestamp] = date
 
             time.sleep(1)
+
+
+def get_date(timestamp: float) -> str:
+    """
+    The function returns date by specified timestamp.
+    :param timestamp: the source timestamp
+    """
+
+    return requests.get(URL.format(timestamp)).text
 
 
 def main() -> None:
