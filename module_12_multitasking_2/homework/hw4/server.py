@@ -7,6 +7,11 @@ app: Flask = Flask(__name__)
 
 @app.route('/timestamp/<timestamp>')
 def get_timestamp(timestamp: str) -> str:
+    """
+    The function returns current datetime by current timestamp.
+    :param timestamp: the current timestamp
+    """
+
     timestamp: float = float(timestamp)
     return str(datetime.fromtimestamp(timestamp))
 
