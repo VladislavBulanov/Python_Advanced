@@ -4,7 +4,7 @@ import sqlite3
 
 SQL_QUERY_TO_DELETE = """
     DELETE FROM `table_fees`
-        WHERE truck_number = ? AND timestamp = ?
+        WHERE truck_number = ? AND timestamp = ?;
 """
 
 
