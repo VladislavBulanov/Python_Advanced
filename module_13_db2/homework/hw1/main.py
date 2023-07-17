@@ -5,7 +5,7 @@ SQL_QUERY: str = """
     SELECT *
         FROM `table_truck_with_vaccine`
         WHERE truck_number = ?
-        AND temperature_in_celsius NOT BETWEEN ? AND ?
+        AND temperature_in_celsius NOT BETWEEN ? AND ?;
 """
 
 
