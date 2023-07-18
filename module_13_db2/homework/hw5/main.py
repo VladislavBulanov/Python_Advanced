@@ -33,13 +33,45 @@ def generate_test_data(
             VALUES (?, ?, ?);
     """, teams)
 
-    # Make draw:
+    draw_result: List[Tuple[int]] = []
+
+    # Get command numbers from database by each level:
+    for level in ("Top", "Normal", "Weak"):
+        command_numbers = cursor.execute("""
+            SELECT command_number
+                FROM `uefa_commands`
+                WHERE command_level = ?;
+        """, (level, )).fetchall()
+
+        # Shuffle teams:
+        if level == "Normal":
+            shuffled_command_numbers = sample(
+                command_numbers, number_of_groups * 2
+            )
+        else:
+            shuffled_command_numbers = sample(command_numbers, number_of_groups)
+
+        # Make draw:
+        group_number = 0
+        current_level_teams = []
+        for number in shuffled_command_numbers:
+            current_level_teams.append((*number, group_number % number_of_groups + 1))
+            group_number += 1
+        draw_result.extend(current_level_teams)
+
+    # Fill 'uefa_draw' table with result of the draw:
+    cursor.executemany("""
+        INSERT INTO `uefa_draw`
+            (command_number, group_number)
+            VALUES (?, ?);
+    """, draw_result)
 
 
 def main() -> None:
     """The main function of the app."""
 
-    number_of_groups: int = int(input('Введите количество групп (от 4 до 16): '))
+    number_of_groups = int(input('Введите количество групп (от 4 до 16): '))
+
     if number_of_groups not in range(4, 17):
         print("Вы ввели неверное количество групп.")
         return
