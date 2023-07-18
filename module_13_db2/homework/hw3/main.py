@@ -30,10 +30,10 @@ def log_bird(
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS table_birds (
-            id integer PRIMARY KEY,
-            datetime varchar,
-            name varchar,
-            count integer
+            id INTEGER PRIMARY KEY,
+            datetime VARCHAR,
+            name VARCHAR,
+            count INTEGER
         );
     """)
 
