@@ -33,7 +33,7 @@ def generate_test_data(
             VALUES (?, ?, ?);
     """, teams)
 
-    draw_result: List[Tuple[int]] = []
+    draw_result: List[tuple] = []
 
     # Get command numbers from database by each level:
     for level in ("Top", "Normal", "Weak"):
