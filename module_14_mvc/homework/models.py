@@ -36,7 +36,7 @@ def init_db(initial_records: List[dict]) -> None:
                 CREATE TABLE `table_books` (
                     id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     title TEXT, 
-                    author TEXT, 
+                    author TEXT 
                 )
                 """
             )
@@ -61,3 +61,22 @@ def get_all_books() -> List[Book]:
             """
         )
         return [Book(*row) for row in cursor.fetchall()]
+
+
+def add_book(title: str, author: str) -> None:
+    """
+    The function adds a book with specified title and author in database.
+    :param title: the title of the book
+    :param author: the author of the book
+    """
+
+    with sqlite3.connect("table_books.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO `table_books` (title, author)
+            VALUES (?, ?);
+            """,
+            (title, author)
+        )
+        conn.commit()
