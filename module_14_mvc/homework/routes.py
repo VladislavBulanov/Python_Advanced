@@ -16,10 +16,10 @@ class NewBookRegistrationForm(FlaskForm):
     describing new book registration form."""
 
     book_title = StringField(validators=[
-        InputRequired("The field 'title' is required"),
+        InputRequired(message="The field 'title' is required"),
     ])
     author_name = StringField(validators=[
-        InputRequired("The field 'author' is required"),
+        InputRequired(message="The field 'author' is required"),
     ])
     submit = SubmitField("Add new book")
 
@@ -58,6 +58,7 @@ def all_books() -> str:
 @app.route('/books/form', methods=["GET", "POST"])
 def get_books_form() -> Union[str, Response]:
     book_form = NewBookRegistrationForm()
+
     if book_form.validate_on_submit():
         title = book_form.book_title.data
         author = book_form.author_name.data
