@@ -5,7 +5,7 @@ from typing import Union, List
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired
 
-from models import init_db, get_all_books, add_book, DATA
+from models import init_db, get_all_books, retrieve_books_by_author, add_book, DATA
 
 app: Flask = Flask(__name__)
 app.config['SECRET_KEY'] = "sample_key"
@@ -66,6 +66,20 @@ def get_books_form() -> Union[str, Response]:
         return redirect(url_for("all_books"))
 
     return render_template('add_book.html', form=book_form)
+
+
+@app.route("/books/<string:author>")
+def get_books_by_author(author: str) -> str:
+    """
+    The function returns HTML-page with the table of books
+    from the source database written by specified author.
+    :param author: the source author
+    """
+
+    return render_template(
+        'books_by_author.html',
+        books=retrieve_books_by_author(author),
+    )
 
 
 if __name__ == '__main__':

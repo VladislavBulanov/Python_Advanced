@@ -53,12 +53,36 @@ def init_db(initial_records: List[dict]) -> None:
 
 
 def get_all_books() -> List[Book]:
+    """
+    The function returns the list of 'Book' class instances
+    which are created on data from the source database.
+    """
+
     with sqlite3.connect('table_books.db') as conn:
         cursor: sqlite3.Cursor = conn.cursor()
         cursor.execute(
             """
             SELECT * from `table_books`
             """
+        )
+        return [Book(*row) for row in cursor.fetchall()]
+
+
+def retrieve_books_by_author(author: str) -> List[Book]:
+    """
+    The function returns the list of 'Book' class instances.
+    The books belong to the specified author.
+    :param author: the source author
+    """
+
+    with sqlite3.connect('table_books.db') as conn:
+        cursor: sqlite3.Cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT * from `table_books`
+            WHERE author = ?;
+            """,
+            (author, )
         )
         return [Book(*row) for row in cursor.fetchall()]
 
