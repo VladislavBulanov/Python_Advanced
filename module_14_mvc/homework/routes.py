@@ -1,10 +1,27 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, redirect, url_for
+from flask_wtf import FlaskForm
 from requests import Response
 from typing import Union, List
+from wtforms import StringField, SubmitField
+from wtforms.validators import InputRequired
 
 from models import init_db, get_all_books, add_book, DATA
 
 app: Flask = Flask(__name__)
+app.config['SECRET_KEY'] = "sample_key"
+
+
+class NewBookRegistrationForm(FlaskForm):
+    """A child class of 'FlaskForm' class
+    describing new book registration form."""
+
+    book_title = StringField(validators=[
+        InputRequired("The field 'title' is required"),
+    ])
+    author_name = StringField(validators=[
+        InputRequired("The field 'author' is required"),
+    ])
+    submit = SubmitField("Add new book")
 
 
 def _get_html_table_for_books(books: List[dict]) -> str:
@@ -40,13 +57,14 @@ def all_books() -> str:
 
 @app.route('/books/form', methods=["GET", "POST"])
 def get_books_form() -> Union[str, Response]:
-    if request.method == "POST":
-        title = request.form["book_title"]
-        author = request.form["author_name"]
+    book_form = NewBookRegistrationForm()
+    if book_form.validate_on_submit():
+        title = book_form.book_title.data
+        author = book_form.author_name.data
         add_book(title, author)
         return redirect(url_for("all_books"))
 
-    return render_template('add_book.html')
+    return render_template('add_book.html', form=book_form)
 
 
 if __name__ == '__main__':

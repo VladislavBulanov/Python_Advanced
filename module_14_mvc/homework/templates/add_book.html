@@ -6,16 +6,19 @@
     <form action="/books/form" method="post">
         <div class="section"><span>1</span>Book title</div>
         <div class="inner-wrap">
-            <label>Book title<input type="text" name="book_title"/></label>
+<!--            <label>Book title<input type="text" name="book_title"/></label>-->
+            {{ form.book_title() }}
         </div>
 
         <div class="section"><span>2</span>Author full name</div>
         <div class="inner-wrap">
-            <label>Author full name<input type="text" name="author_name"/></label>
+<!--            <label>Author full name<input type="text" name="author_name"/></label>-->
+            {{ form.author_name() }}
         </div>
 
         <div class="button-section">
-            <input type="submit" name="Add new book"/>
+<!--            <input type="submit" name="add_new_book"/>-->
+            {{ form.submit() }}
         </div>
     </form>
 </div>
