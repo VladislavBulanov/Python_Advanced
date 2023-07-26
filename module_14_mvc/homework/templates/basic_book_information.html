@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<h1>Books:</h1>
+<h1>Book's info:</h1>
 
-{% if books %}
+{% if book %}
 <table class="customTable">
     <thead>
     <tr>
@@ -15,7 +15,6 @@
     </tr>
     </thead>
     <tbody>
-    {% for book in books %}
     <tr>
         <td>
             {{ book.id }}
@@ -30,11 +29,10 @@
             {{ book.views }}
         </td>
     </tr>
-    {% endfor %}
     </tbody>
 </table>
 {% else %}
-<h2> Sorry, no books in DB of this author.</h2>
+<h2> Sorry, no books in DB with this ID.</h2>
 {% endif %}
 
 {% endblock %}

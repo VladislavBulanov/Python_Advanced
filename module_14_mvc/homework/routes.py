@@ -1,11 +1,18 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_wtf import FlaskForm
 from requests import Response
-from typing import Union, List
+from typing import Union
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired
 
-from models import init_db, get_all_books, retrieve_books_by_author, add_book, DATA
+from models import (
+    init_db,
+    get_all_books,
+    retrieve_books_by_author,
+    retrieve_book_by_id,
+    add_book,
+    DATA,
+)
 
 app: Flask = Flask(__name__)
 app.config['SECRET_KEY'] = "sample_key"
@@ -24,27 +31,27 @@ class NewBookRegistrationForm(FlaskForm):
     submit = SubmitField("Add new book")
 
 
-def _get_html_table_for_books(books: List[dict]) -> str:
-    table = """
-        <table>
-            <thead>
-            <tr>
-                <th>ID</td>
-                <th>Title</td>
-                <th>Author</td>
-            </tr>
-            </thead>
-            <tbody>
-                {books_rows}
-            </tbody>
-        </table>
-    """
-    rows: str = ''
-    for book in books:
-        rows += '<tr><td>{id}</tb><td>{title}</tb><td>{author}</tb></tr>'.format(
-            id=book['id'], title=book['title'], author=book['author'],
-        )
-    return table.format(books_rows=rows)
+# def _get_html_table_for_books(books: List[dict]) -> str:
+#     table = """
+#         <table>
+#             <thead>
+#             <tr>
+#                 <th>ID</td>
+#                 <th>Title</td>
+#                 <th>Author</td>
+#             </tr>
+#             </thead>
+#             <tbody>
+#                 {books_rows}
+#             </tbody>
+#         </table>
+#     """
+#     rows: str = ''
+#     for book in books:
+#         rows += '<tr><td>{id}</tb><td>{title}</tb><td>{author}</tb></tr>'.format(
+#             id=book['id'], title=book['title'], author=book['author'],
+#         )
+#     return table.format(books_rows=rows)
 
 
 @app.route('/books')
@@ -71,14 +78,29 @@ def get_books_form() -> Union[str, Response]:
 @app.route("/books/<string:author>")
 def get_books_by_author(author: str) -> str:
     """
-    The function returns HTML-page with the table of books
-    from the source database written by specified author.
+    The function returns string with HTML code for rendering the table
+    of books from the source database written by specified author.
     :param author: the source author
     """
 
     return render_template(
         'books_by_author.html',
         books=retrieve_books_by_author(author),
+    )
+
+
+@app.route("/books/<int:book_id>")
+def get_basic_info_about_book(book_id: int) -> str:
+    """
+    The function returns string with HTML code for
+    rendering page with the basic information of the
+    source book (the book is searched by ID in database).
+    :param book_id: the ID of the source book in database
+    """
+
+    return render_template(
+        'basic_book_information.html',
+        book=retrieve_book_by_id(book_id),
     )
 
 
