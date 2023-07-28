@@ -3,7 +3,7 @@
 {% block content %}
 <div class="form-style-10">
     <h1>Add new book!<span>Feel the fields and new books to the DB!</span></h1>
-    <form action="/books/form" method="post">
+    <form action="{{ url_for('get_books_form') }}" method="post">
         {{ form.csrf_token }}
         <div class="section"><span>1</span>Book title</div>
         <div class="inner-wrap">

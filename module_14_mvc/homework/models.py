@@ -105,7 +105,7 @@ def retrieve_books_by_author(author: str) -> List[Book]:
         return [Book(*row) for row in cursor.fetchall()]
 
 
-def retrieve_book_by_id(book_id: int) -> Union[Book, False]:
+def retrieve_book_by_id(book_id: int) -> Union[Book, bool]:
     """
     The function returns the 'Book' class instance
     if the book with source ID exists in database.
