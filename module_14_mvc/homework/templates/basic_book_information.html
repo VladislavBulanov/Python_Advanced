@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>
-        Books
-    </title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
-    <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h1>Books:</h1>
+{% block content %}
 
-{% if books %}
+<h1>Book's info:</h1>
+
+{% if book %}
 <table class="customTable">
     <thead>
     <tr>
@@ -22,7 +15,6 @@
     </tr>
     </thead>
     <tbody>
-    {% for book in books %}
     <tr>
         <td>
             {{ book.id }}
@@ -37,12 +29,10 @@
             {{ book.views }}
         </td>
     </tr>
-    {% endfor %}
     </tbody>
 </table>
 {% else %}
-<h2> Sorry, no books in DB.</h2>
+<h2> Sorry, no books in DB with this ID.</h2>
 {% endif %}
 
-</body>
-</html>
+{% endblock %}

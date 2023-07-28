@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>
-        Books
-    </title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
-    <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
 
 <h1>Books:</h1>
 
@@ -41,8 +34,7 @@
     </tbody>
 </table>
 {% else %}
-<h2> Sorry, no books in DB.</h2>
+<h2> Sorry, no books in DB of this author.</h2>
 {% endif %}
 
-</body>
-</html>
+{% endblock %}
