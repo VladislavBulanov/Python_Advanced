@@ -140,7 +140,11 @@ def is_room_booked(room_id: int, booking_dates: dict) -> bool:
             SELECT COUNT(*) FROM `bookings`
             WHERE room_id = ? AND (check_in < ? AND check_out > ?);
             """,
-            (room_id, booking_dates["checkIn"], booking_dates["checkOut"])
+            (
+                room_id,
+                int(booking_dates["checkOut"]),
+                int(booking_dates["checkIn"]),
+            )
         )
         return cursor.fetchone()[0] > 0
 
