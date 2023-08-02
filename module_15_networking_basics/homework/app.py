@@ -29,8 +29,8 @@ def add_room():
         price=data["price"],
     )
 
-    insert_room(new_room)
-    return "The room is successfully added", 200
+    room_id = insert_room(new_room)
+    return jsonify({"roomId": room_id}), 200
 
 
 @app.route("/room", methods=["GET"])
@@ -60,13 +60,18 @@ def make_booking():
 
     # Create a new "Booking" object from the request data:
     new_booking = Booking(
-        booking_dates=data["bookingDates"],
+        check_in=data["bookingDates"]["checkIn"],
+        check_out=data["bookingDates"]["checkOut"],
         first_name=data["firstName"],
         last_name=data["lastName"],
         room_id=data["roomId"],
     )
 
-    if is_room_booked(new_booking.room_id, new_booking.booking_dates):
+    if is_room_booked(
+        new_booking.room_id,
+        new_booking.check_in,
+        new_booking.check_out,
+    ):
         return f"Room is already booked", 409
 
     insert_booking(new_booking)

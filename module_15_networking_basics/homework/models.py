@@ -35,14 +35,16 @@ class Booking:
 
     def __init__(
             self,
-            booking_dates: dict,
+            check_in: str,
+            check_out: str,
             first_name: str,
             last_name: str,
             room_id: int,
     ) -> None:
         """The class constructor."""
 
-        self.booking_dates = booking_dates
+        self.check_in = check_in
+        self.check_out = check_out
         self.first_name = first_name
         self.last_name = last_name
         self.room_id = room_id
@@ -81,9 +83,10 @@ def create_tables() -> None:
         )
 
 
-def insert_room(room: Room) -> None:
+def insert_room(room: Room) -> int:
     """
-    A function adds room information in database.
+    A function adds room information in database
+    and returns ID of the last added room.
     :param room: the instance of "Room" class
     """
 
@@ -98,7 +101,11 @@ def insert_room(room: Room) -> None:
             (room.floor, room.beds, room.guest_num, room.price)
         )
 
+        # Get the ID of the inserted room:
+        room_id = cursor.lastrowid
         conn.commit()
+
+    return room_id
 
 
 def get_rooms() -> List[Room]:
@@ -125,12 +132,17 @@ def get_rooms() -> List[Room]:
     return rooms
 
 
-def is_room_booked(room_id: int, booking_dates: dict) -> bool:
+def is_room_booked(
+        room_id: int,
+        check_in: str,
+        check_out: str,
+) -> bool:
     """
     A function returns True if the source room is booked for
     specified period. Otherwise, a function returns False.
     :param room_id: the ID of the source hotel room
-    :param booking_dates: the dictionary with dates of booking period
+    :param check_in: the date of check in
+    :param check_out: the date of check out
     """
 
     with sqlite3.connect(DB_NAME) as conn:
@@ -142,8 +154,8 @@ def is_room_booked(room_id: int, booking_dates: dict) -> bool:
             """,
             (
                 room_id,
-                int(booking_dates["checkOut"]),
-                int(booking_dates["checkIn"]),
+                check_out,
+                check_in,
             )
         )
         return cursor.fetchone()[0] > 0
@@ -170,10 +182,21 @@ def insert_booking(booking: Booking) -> None:
             VALUES (?, ?, ?, ?, ?);
             """,
             (
-                booking.booking_dates["checkIn"],
-                booking.booking_dates["checkOut"],
+                booking.check_in,
+                booking.check_out,
                 booking.first_name,
                 booking.last_name,
                 booking.room_id,
             )
         )
+
+        # Remove the booked room from the `rooms` table:
+        cursor.execute(
+            """
+            DELETE FROM `rooms`
+            WHERE room_id = ?;
+            """,
+            (booking.room_id, )
+        )
+
+        conn.commit()
