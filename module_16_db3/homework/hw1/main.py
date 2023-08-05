@@ -50,8 +50,8 @@ SQL_SCRIPT: str = """
     );
 """
 
-
-with sqlite3.connect("film_database.db") as conn:
-    cursor: sqlite3.Cursor = conn.cursor()
-    cursor.executescript(SQL_SCRIPT)
-    conn.commit()
+if __name__ == "__main__":
+    with sqlite3.connect("film_database.db") as conn:
+        cursor: sqlite3.Cursor = conn.cursor()
+        cursor.executescript(SQL_SCRIPT)
+        conn.commit()
