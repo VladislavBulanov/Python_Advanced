@@ -1,5 +1,6 @@
 import sqlite3
 
+
 SQL_QUERY: str = """
     SELECT ord.order_no,
            manager.full_name,
