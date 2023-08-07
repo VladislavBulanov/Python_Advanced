@@ -1,5 +1,7 @@
-SELECT DISTINCT Ships.name AS head_ship
+SELECT Ships.name
 FROM Ships
-LEFT JOIN Outcomes ON Ships.name = Outcomes.ship
 WHERE Ships.name = Ships.class
-OR Ships.class NOT IN (SELECT DISTINCT name FROM Ships);
+UNION
+SELECT Outcomes.ship
+FROM Outcomes
+JOIN Classes ON Classes.class = Outcomes.ship;
