@@ -15,11 +15,13 @@ api = Api(app)
 
 
 class BookList(Resource):
-    def get(self) -> tuple[list[dict], int]:
+    @staticmethod
+    def get() -> tuple[list[dict], int]:
         schema = BookSchema()
         return schema.dump(get_all_books(), many=True), 200
 
-    def post(self) -> tuple[dict, int]:
+    @staticmethod
+    def post() -> tuple[dict, int]:
         data = request.json
         schema = BookSchema()
         try:
