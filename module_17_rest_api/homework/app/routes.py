@@ -33,6 +33,7 @@ class BookList(Resource):
 
 api.add_resource(BookList, '/api/books')
 
+
 if __name__ == '__main__':
     init_db(initial_records=DATA)
     app.run(debug=True)

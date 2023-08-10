@@ -6,7 +6,7 @@ from models import get_book_by_title, Book
 class BookSchema(Schema):
     id = fields.Int(dump_only=True)
     title = fields.Str(required=True)
-    author = fields.Str(required=True)
+    author_id = fields.Int(required=True)
 
     @validates('title')
     def validate_title(self, title: str) -> None:
