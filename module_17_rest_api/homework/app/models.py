@@ -74,7 +74,7 @@ def init_db(initial_records: List[Dict]) -> None:
                     id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     title TEXT,
                     author_id INTEGER,
-                    FOREIGN KEY(author_id) REFERENCES `authors`(id)
+                    FOREIGN KEY(author_id) REFERENCES `authors`(id) ON DELETE CASCADE
                 );
                 
                 CREATE TABLE `authors`(
