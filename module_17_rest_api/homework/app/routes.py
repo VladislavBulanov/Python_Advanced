@@ -1,10 +1,11 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 from marshmallow import ValidationError
-from typing import Optional
+from typing import Optional, List
 
 from models import (
     Book,
+    Author,
     DATA,
     get_all_books,
     get_book_by_id,
@@ -12,8 +13,12 @@ from models import (
     add_book,
     update_book_by_id,
     delete_book_by_id,
+    get_author_by_id,
+    get_all_books_by_author_id,
+    delete_author_by_author_id,
+    add_author,
 )
-from schemas import BookSchema
+from schemas import BookSchema, AuthorSchema
 
 app = Flask(__name__)
 api = Api(app)
@@ -30,9 +35,20 @@ class BookList(Resource):
         data = request.json
         schema = BookSchema()
         try:
-            book = schema.load(data)
+            book: Book = schema.load(data)
         except ValidationError as exc:
             return exc.messages, 400
+
+        if 'author' in data:
+            author_data = data['author']
+            schema = AuthorSchema()
+            try:
+                author: Author = schema.load(author_data)
+            except ValidationError as exc:
+                return exc.messages, 400
+
+            author = add_author(author)
+            book.author_id = author.id
 
         book = add_book(book)
         return schema.dump(book), 201
@@ -76,8 +92,43 @@ class SelectedBook(Resource):
         return {"message": "Book not found"}, 404
 
 
+class SelectedAuthor(Resource):
+    @staticmethod
+    def post():
+        data = request.json
+        schema = AuthorSchema()
+        try:
+            author = schema.load(data)
+        except ValidationError as exc:
+            return exc.messages, 400
+
+        author = add_author(author)
+        return schema.dump(author), 201
+
+    @staticmethod
+    def get(author_id: int) ->tuple[dict, int]:
+        books: Optional[List[Book]] = get_all_books_by_author_id(author_id)
+        if books:
+            schema = BookSchema()
+            return schema.dump(books, many=True), 200
+        return {"message": "Books not found"}, 404
+
+    @staticmethod
+    def delete(author_id: int):
+        author = get_author_by_id(author_id)
+        if author:
+            delete_author_by_author_id(author_id)
+            return {"message": "Author was successfully deleted"}, 200
+        return {"message": "Author not found"}, 404
+
+
 api.add_resource(BookList, '/api/books')
 api.add_resource(SelectedBook, '/api/books/<int:book_id>')
+api.add_resource(
+    SelectedAuthor,
+    '/api/authors',
+    '/api/authors/<int:author_id>',
+)
 
 
 if __name__ == '__main__':

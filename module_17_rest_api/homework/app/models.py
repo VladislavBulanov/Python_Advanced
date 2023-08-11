@@ -8,9 +8,9 @@ DATA = [
         'id': 0,
         'title': 'A Byte of Python',
         'author_id': 1,
-        'first_name': '',
+        'first_name': None,
         'last_name': 'Swaroop C. H.',
-        'middle_name': '',
+        'middle_name': None,
     },
     {
         'id': 1,
@@ -18,7 +18,7 @@ DATA = [
         'author_id': 2,
         'first_name': 'Herman',
         'last_name': 'Melville',
-        'middle_name': '',
+        'middle_name': None,
     },
     {
         'id': 3,
@@ -38,10 +38,10 @@ BOOKS_TABLE_NAME = 'books'
 class Author:
     """A dataclass describes the author."""
 
-    id: int
     first_name: str
     last_name: str
     middle_name: Optional[str] = None
+    id: Optional[int] = None
 
 
 @dataclass
@@ -70,6 +70,8 @@ def init_db(initial_records: List[Dict]) -> None:
         if not exists:
             cursor.executescript(
                 f"""
+                PRAGMA foreign_keys = ON;
+                
                 CREATE TABLE `{BOOKS_TABLE_NAME}`(
                     id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     title TEXT,
@@ -215,3 +217,47 @@ def get_author_by_id(author_id: int) -> Optional[Author]:
         author = cursor.fetchone()
         if author:
             return _get_author_obj_from_row(author)
+
+
+def get_all_books_by_author_id(author_id: int) -> Optional[List[Book]]:
+    with sqlite3.connect(DATABASE_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            f"""
+            SELECT * FROM `{BOOKS_TABLE_NAME}`
+            WHERE author_id = ?;
+            """,
+            (author_id, )
+        )
+        books = cursor.fetchall()
+        if books:
+            return [_get_book_obj_from_row(row) for row in books]
+
+
+def delete_author_by_author_id(author_id: int) -> None:
+    with sqlite3.connect(DATABASE_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.executescript(
+            f"""
+            PRAGMA foreign_keys = ON;
+            
+            DELETE FROM `authors`
+            WHERE id = {author_id};
+            """
+        )
+        conn.commit()
+
+
+def add_author(author: Author) -> Author:
+    with sqlite3.connect(DATABASE_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO `authors`
+            (first_name, last_name, middle_name)
+            VALUES (?, ?, ?)
+            """,
+            (author.first_name, author.last_name, author.middle_name)
+        )
+        author.id = cursor.lastrowid
+        return author
