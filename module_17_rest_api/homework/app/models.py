@@ -117,6 +117,12 @@ def _get_book_obj_from_row(row: tuple) -> Book:
     return Book(id=row[0], title=row[1], author_id=row[2])
 
 
+def _get_author_obj_from_row(row: tuple) -> Author:
+    return Author(
+        id=row[0], first_name=row[1], last_name=row[2], middle_name=row[3],
+    )
+
+
 def get_all_books() -> list[Book]:
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
@@ -194,3 +200,18 @@ def get_book_by_title(book_title: str) -> Optional[Book]:
         book = cursor.fetchone()
         if book:
             return _get_book_obj_from_row(book)
+
+
+def get_author_by_id(author_id: int) -> Optional[Author]:
+    with sqlite3.connect(DATABASE_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT * FROM `authors`
+            WHERE id = ?;
+            """,
+            (author_id, )
+        )
+        author = cursor.fetchone()
+        if author:
+            return _get_author_obj_from_row(author)
