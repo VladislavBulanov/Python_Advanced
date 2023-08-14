@@ -17,7 +17,7 @@ class AuthorSchema(Schema):
 class BookSchema(Schema):
     id = fields.Int(dump_only=True)
     title = fields.Str(required=True)
-    author_id = fields.Int(required=True)
+    author_id = fields.Int(required=True, allow_none=True)
     author = fields.Nested(AuthorSchema, required=False)
 
     @validates('title')
@@ -30,8 +30,7 @@ class BookSchema(Schema):
 
     @validates('author_id')
     def validate_author_id(self, author_id: int) -> None:
-        is_author_data_sent = getattr(self, 'author', None)
-        if (is_author_data_sent is None) and (get_author_by_id(author_id) is None):
+        if author_id is not None and get_author_by_id(author_id) is None:
             raise ValidationError(
                 'Author with this ID does not exist in database'
             )
