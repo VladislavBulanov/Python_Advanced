@@ -106,7 +106,7 @@ class SelectedAuthor(Resource):
         return schema.dump(author), 201
 
     @staticmethod
-    def get(author_id: int) ->tuple[dict, int]:
+    def get(author_id: int) -> tuple[dict, int]:
         books: Optional[List[Book]] = get_all_books_by_author_id(author_id)
         if books:
             schema = BookSchema()

@@ -261,3 +261,35 @@ def add_author(author: Author) -> Author:
         )
         author.id = cursor.lastrowid
         return author
+
+
+def get_author_by_full_name(
+        first_name: str,
+        middle_name: Optional[str],
+        last_name: str,
+) -> Optional[Author]:
+    with sqlite3.connect(DATABASE_NAME) as conn:
+        cursor = conn.cursor()
+        if middle_name:
+            cursor.execute(
+                """
+                SELECT * FROM `authors`
+                WHERE first_name = ?
+                AND middle_name = ?
+                AND last_name = ?;
+                """,
+                (first_name, middle_name, last_name)
+            )
+        else:
+            cursor.execute(
+                """
+                SELECT * FROM `authors`
+                WHERE first_name = ?
+                AND middle_name IS NULL
+                AND last_name = ?;
+                """,
+                (first_name, last_name)
+            )
+        author = cursor.fetchone()
+        if author:
+            return _get_author_obj_from_row(author)

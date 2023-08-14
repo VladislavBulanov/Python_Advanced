@@ -1,6 +1,13 @@
 from marshmallow import Schema, fields, validates, ValidationError, post_load
+from typing import Optional
 
-from models import get_book_by_title, get_author_by_id, Book, Author
+from models import (
+    get_book_by_title,
+    get_author_by_id,
+    get_author_by_full_name,
+    Book,
+    Author,
+)
 
 
 class AuthorSchema(Schema):
@@ -11,6 +18,13 @@ class AuthorSchema(Schema):
 
     @post_load
     def create_author(self, data: dict, **kwargs) -> Author:
+        is_author_exist: Optional[Author] = get_author_by_full_name(
+            data.get('first_name'),
+            data.get('middle_name', None),
+            data.get('last_name'),
+        )
+        if is_author_exist:
+            raise ValidationError('This author already exists in database')
         return Author(**data)
 
 
