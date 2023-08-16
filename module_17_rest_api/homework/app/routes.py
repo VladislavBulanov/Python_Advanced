@@ -25,13 +25,27 @@ api = Api(app)
 
 
 class BookList(Resource):
+    """Resource class for handling book-related operations."""
+
     @staticmethod
     def get() -> tuple[list[dict], int]:
+        """
+        Handle GET request to fetch a list of all books.
+        :return: tuple containing a list of dictionaries
+        representing books and an HTTP status code
+        """
+
         schema = BookSchema()
         return schema.dump(get_all_books(), many=True), 200
 
     @staticmethod
     def post() -> tuple[dict, int]:
+        """
+        Handle POST request to add a new book.
+        :return: tuple containing a dictionary representing
+        the added book and an HTTP status code.
+        """
+
         data = request.json
         schema = BookSchema()
         try:
@@ -55,8 +69,18 @@ class BookList(Resource):
 
 
 class SelectedBook(Resource):
+    """Resource class for handling operations
+    related to a single selected book."""
+
     @staticmethod
     def get(book_id: int) -> tuple[dict, int]:
+        """
+        Handle GET request to retrieve details of a specific book.
+        :param book_id: the ID of the book to retrieve
+        :return: tuple containing a dictionary representing
+        the book and an HTTP status code
+        """
+
         book = get_book_by_id(book_id)
         if book:
             schema = BookSchema()
@@ -65,6 +89,13 @@ class SelectedBook(Resource):
 
     @staticmethod
     def put(book_id: int):
+        """
+        Handle PUT request to update details of a specific book.
+        :param book_id: the ID of the book to update
+        :return: tuple containing a dictionary representing
+        the updated book and an HTTP status code
+        """
+
         data = request.json
         schema = BookSchema()
 
@@ -85,6 +116,13 @@ class SelectedBook(Resource):
 
     @staticmethod
     def delete(book_id: int) -> tuple[dict, int]:
+        """
+        Handle DELETE request to delete a specific book.
+        :param book_id: the ID of the book to delete
+        :return: tuple containing a dictionary with a deletion
+        message and an HTTP status code
+        """
+
         book = get_book_by_id(book_id)
         if book:
             delete_book_by_id(book_id)
@@ -93,8 +131,17 @@ class SelectedBook(Resource):
 
 
 class SelectedAuthor(Resource):
+    """Resource class for handling operations
+    related to a single selected author."""
+
     @staticmethod
     def post():
+        """
+        Handle POST request to add a new author.
+        :return: tuple containing a dictionary representing
+        the added author and an HTTP status code
+        """
+
         data = request.json
         schema = AuthorSchema()
         try:
@@ -107,6 +154,13 @@ class SelectedAuthor(Resource):
 
     @staticmethod
     def get(author_id: int) -> tuple[dict, int]:
+        """
+        Handle GET request to retrieve books written by a specific author.
+        :param author_id: the ID of the source author
+        :return: tuple containing a list of dictionaries
+        representing books and an HTTP status code
+        """
+
         books: Optional[List[Book]] = get_all_books_by_author_id(author_id)
         if books:
             schema = BookSchema()
@@ -115,6 +169,13 @@ class SelectedAuthor(Resource):
 
     @staticmethod
     def delete(author_id: int):
+        """
+        Handle DELETE request to delete a specific author.
+        :param author_id: the ID of the author to delete
+        :return: tuple containing a dictionary with a
+        deletion message and an HTTP status code
+        """
+
         author = get_author_by_id(author_id)
         if author:
             delete_author_by_author_id(author_id)

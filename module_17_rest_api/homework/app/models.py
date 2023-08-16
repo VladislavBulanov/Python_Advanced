@@ -57,6 +57,13 @@ class Book:
 
 
 def init_db(initial_records: List[Dict]) -> None:
+    """
+    The function creates database with default
+    data if database does not exist yet.
+    :param initial_records: the default data
+    :return: None
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -116,16 +123,35 @@ def init_db(initial_records: List[Dict]) -> None:
 
 
 def _get_book_obj_from_row(row: tuple) -> Book:
+    """
+    The function converts the source row from
+    database in 'Book' class instance.
+    :param row: the tuple with source row from database
+    :return: 'Book' class instance
+    """
+
     return Book(id=row[0], title=row[1], author_id=row[2])
 
 
 def _get_author_obj_from_row(row: tuple) -> Author:
+    """
+    The function converts the source row from
+    database in 'Author' class instance.
+    :param row: the tuple with source row from database
+    :return: 'Author' class instance
+    """
+
     return Author(
         id=row[0], first_name=row[1], last_name=row[2], middle_name=row[3],
     )
 
 
 def get_all_books() -> list[Book]:
+    """
+    The function returns the list of 'Book' class instances.
+    :return: the list of 'Book' class instances
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(f'SELECT * FROM `{BOOKS_TABLE_NAME}`')
@@ -134,6 +160,12 @@ def get_all_books() -> list[Book]:
 
 
 def add_book(book: Book) -> Book:
+    """
+    The function adds the data of book in the source database.
+    :param book: the 'Book' class instance
+    :return: the 'Book' class instance with right ID
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -148,6 +180,15 @@ def add_book(book: Book) -> Book:
 
 
 def get_book_by_id(book_id: int) -> Optional[Book]:
+    """
+    The function returns the 'Book' class instance by specified
+    book ID if that book exists in database. Otherwise,
+    the function returns None.
+    :param book_id: the ID of the book to find
+    :return: the 'Book' class instance if that book
+    exists in database or None if it does not.
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -163,6 +204,12 @@ def get_book_by_id(book_id: int) -> Optional[Book]:
 
 
 def update_book_by_id(book: Book) -> None:
+    """
+    The function updates information of specified book in database.
+    :param book: the 'Book' class instance with updated information
+    :return: None
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -177,6 +224,12 @@ def update_book_by_id(book: Book) -> None:
 
 
 def delete_book_by_id(book_id: int) -> None:
+    """
+    The function deletes book in database by specified ID.
+    :param book_id: the ID of the book to delete
+    :return: None
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -190,6 +243,16 @@ def delete_book_by_id(book_id: int) -> None:
 
 
 def get_book_by_title(book_title: str) -> Optional[Book]:
+    """
+    The function returns the 'Book' class instance
+    by specified book title if book with that title
+    exists in source database. Otherwise, the function
+    returns None.
+    :param book_title: the title of the book to find
+    :return: 'Book' class instance if book
+    exists in database, None if it does not
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -205,6 +268,15 @@ def get_book_by_title(book_title: str) -> Optional[Book]:
 
 
 def get_author_by_id(author_id: int) -> Optional[Author]:
+    """
+    The function returns 'Author' class instance by author ID
+    if that author exists in database. Otherwise, the function
+    returns None.
+    :param author_id: the ID of the author to find
+    :return: 'Author' class instance if author
+    exists in database, None if he does not
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -220,6 +292,14 @@ def get_author_by_id(author_id: int) -> Optional[Author]:
 
 
 def get_all_books_by_author_id(author_id: int) -> Optional[List[Book]]:
+    """
+    The function returns all books of specified
+    author or None if this author does not exist,
+    or he hasn't books.
+    :param author_id: the ID of source author
+    :return: list of 'Book' class instances or None
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -235,6 +315,12 @@ def get_all_books_by_author_id(author_id: int) -> Optional[List[Book]]:
 
 
 def delete_author_by_author_id(author_id: int) -> None:
+    """
+    The function deletes the author from database by specified author ID.
+    :param author_id: the ID of the author to delete
+    :return: None
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.executescript(
@@ -249,6 +335,12 @@ def delete_author_by_author_id(author_id: int) -> None:
 
 
 def add_author(author: Author) -> Author:
+    """
+    The function adds author to the source database.
+    :param author: the data with author information to add
+    :return: the 'Author' class instance
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -268,6 +360,15 @@ def get_author_by_full_name(
         middle_name: Optional[str],
         last_name: str,
 ) -> Optional[Author]:
+    """
+    The function returns author by his full name.
+    :param first_name: the first name of author
+    :param middle_name: the middle name of author (if exists)
+    :param last_name: the last name of author
+    :return: the 'Author' class instance if that author
+    exists in database or None if he does not
+    """
+
     with sqlite3.connect(DATABASE_NAME) as conn:
         cursor = conn.cursor()
         if middle_name:
