@@ -1,7 +1,8 @@
+import json
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
 from flask import Flask, request
-from flasgger import APISpec, Swagger
+from flasgger import APISpec, Swagger, swag_from
 from flask_restful import Api, Resource
 from marshmallow import ValidationError
 from typing import Optional, List
@@ -22,6 +23,9 @@ from models import (
     add_author,
 )
 from schemas import BookSchema, AuthorSchema
+
+with open("authors.json", "r", encoding="utf-8") as json_file:
+    authors_json = json.load(json_file)
 
 app = Flask(__name__)
 api = Api(app)
@@ -46,15 +50,6 @@ class BookList(Resource):
         Handle GET request to fetch a list of all books.
         :return: tuple containing a list of dictionaries
         representing books and an HTTP status code
-        ---
-        summary: Get a list of all books
-        responses:
-          200:
-            description: A list of books
-            schema:
-              type: array
-              items:
-                $ref: '#/definitions/Book'
         """
 
         schema = BookSchema()
@@ -66,21 +61,6 @@ class BookList(Resource):
         Handle POST request to add a new book.
         :return: tuple containing a dictionary representing
         the added book and an HTTP status code.
-        ---
-        summary: Add a new book
-        parameters:
-          - in: body
-            name: body
-            required: true
-            schema:
-              $ref: '#/definitions/Book'
-        responses:
-          201:
-            description: The added book
-            schema:
-              $ref: '#/definitions/Book'
-          400:
-            description: Invalid input data
         """
 
         data = request.json
@@ -116,26 +96,6 @@ class SelectedBook(Resource):
         :param book_id: the ID of the book to retrieve
         :return: tuple containing a dictionary representing
         the book and an HTTP status code
-        ---
-        summary: Get details of a specific book
-        parameters:
-          - in: path
-            name: book_id
-            required: true
-            type: integer
-            description: The ID of the book to retrieve.
-        responses:
-          200:
-            description: Book details successfully retrieved.
-            schema:
-              $ref: '#/definitions/Book'
-          404:
-            description: Book not found.
-            schema:
-              properties:
-                message:
-                  type: string
-                  example: Book not found.
         """
 
         book = get_book_by_id(book_id)
@@ -151,28 +111,6 @@ class SelectedBook(Resource):
         :param book_id: the ID of the book to update
         :return: tuple containing a dictionary representing
         the updated book and an HTTP status code
-        ---
-        summary: Update details of a specific book
-        parameters:
-          - in: path
-            name: book_id
-            required: true
-            type: integer
-            description: The ID of the book to update
-          - in: body
-            name: body
-            required: true
-            schema:
-              $ref: '#/definitions/Book'
-        responses:
-          200:
-            description: The updated book
-            schema:
-              $ref: '#/definitions/Book'
-          400:
-            description: Invalid input data
-          404:
-            description: Book not found
         """
 
         data = request.json
@@ -200,19 +138,6 @@ class SelectedBook(Resource):
         :param book_id: the ID of the book to delete
         :return: tuple containing a dictionary with a deletion
         message and an HTTP status code
-        ---
-        summary: Delete a specific book
-        parameters:
-          - in: path
-            name: book_id
-            required: true
-            type: integer
-            description: The ID of the book to delete
-        responses:
-          200:
-            description: Book successfully deleted
-          404:
-            description: Book not found
         """
 
         book = get_book_by_id(book_id)
@@ -226,8 +151,8 @@ class SelectedAuthor(Resource):
     """Resource class for handling operations
     related to a single selected author."""
 
-    @staticmethod
-    def post():
+    @swag_from(authors_json, methods=["POST"])
+    def post(self):
         """
         Handle POST request to add a new author.
         :return: tuple containing a dictionary representing
@@ -244,8 +169,8 @@ class SelectedAuthor(Resource):
         author = add_author(author)
         return schema.dump(author), 201
 
-    @staticmethod
-    def get(author_id: int) -> tuple[dict, int]:
+    @swag_from(authors_json, methods=["GET"])
+    def get(self, author_id: int) -> tuple[dict, int]:
         """
         Handle GET request to retrieve books written by a specific author.
         :param author_id: the ID of the source author
@@ -259,8 +184,8 @@ class SelectedAuthor(Resource):
             return schema.dump(books, many=True), 200
         return {"message": "Books not found"}, 404
 
-    @staticmethod
-    def delete(author_id: int):
+    @swag_from(authors_json, methods="DELETE")
+    def delete(self, author_id: int):
         """
         Handle DELETE request to delete a specific author.
         :param author_id: the ID of the author to delete
@@ -275,11 +200,11 @@ class SelectedAuthor(Resource):
         return {"message": "Author not found"}, 404
 
 
-template = spec.to_flasgger(
-    app,
-    definitions=[BookSchema],
-)
-swagger = Swagger(app, template=template)
+# template = spec.to_flasgger(
+#     app,
+#     definitions=[BookSchema],
+# )
+swagger = Swagger(app, template_file="books.yaml")
 
 api.add_resource(BookList, '/api/books')
 api.add_resource(SelectedBook, '/api/books/<int:book_id>')
