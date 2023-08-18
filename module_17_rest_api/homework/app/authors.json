@@ -28,25 +28,6 @@
           "description": "Bad request"
         }
       }
-    },
-    "get": {
-      "tags": ["Author"],
-      "summary": "Get all authors",
-      "responses": {
-        "200": {
-          "description": "List of authors",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/AuthorSchema"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "/api/authors/{author_id}": {
