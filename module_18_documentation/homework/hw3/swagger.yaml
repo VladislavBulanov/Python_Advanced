@@ -1,0 +1,57 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: JSON-RPC Calculator API
+  description: API for performing basic arithmetic operations using JSON-RPC
+paths:
+  /api:
+    post:
+      tags:
+        - Operations
+      summary: JSON-RPC API endpoint
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              jsonrpc:
+                type: string
+                example: 2.0
+              method:
+                type: string
+                enum:
+                  - calc.add
+                  - calc.subtract
+                  - calc.multiply
+                  - calc.divide
+              params:
+                type: object
+              id:
+                type: integer
+                example: 1
+      responses:
+        '200':
+          description: Successful JSON-RPC response
+          schema:
+            type: object
+            properties:
+              jsonrpc:
+                type: string
+                example: 2.0
+              result:
+                type: number
+                format: float
+                example: 7.0
+              id:
+                type: integer
+                example: 1
+        '400':
+          description: Invalid JSON-RPC request
+        '500':
+          description: Internal JSON-RPC error
