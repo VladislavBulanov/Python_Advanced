@@ -5,6 +5,7 @@ from flasgger import APISpec, Swagger
 from flask_restful import Api, Resource
 from marshmallow import ValidationError
 from typing import Optional, List
+from werkzeug.serving import WSGIRequestHandler
 
 from models import (
     Book,
@@ -213,4 +214,5 @@ api.add_resource(
 
 if __name__ == '__main__':
     init_db(initial_records=DATA)
+    WSGIRequestHandler.protocol_version = "HTTP/1.1"
     app.run(debug=True)
