@@ -24,6 +24,8 @@ from models import (
 )
 from schemas import BookSchema, AuthorSchema
 
+WSGIRequestHandler.protocol_version = "HTTP/1.1"
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -214,5 +216,4 @@ api.add_resource(
 
 if __name__ == '__main__':
     init_db(initial_records=DATA)
-    WSGIRequestHandler.protocol_version = "HTTP/1.1"
     app.run(debug=True)
