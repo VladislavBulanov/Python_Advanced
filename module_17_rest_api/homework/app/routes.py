@@ -1,7 +1,11 @@
+from apispec.ext.marshmallow import MarshmallowPlugin
+from apispec_webframeworks.flask import FlaskPlugin
 from flask import Flask, request
+from flasgger import APISpec, Swagger
 from flask_restful import Api, Resource
 from marshmallow import ValidationError
 from typing import Optional, List
+from werkzeug.serving import WSGIRequestHandler
 
 from models import (
     Book,
@@ -20,18 +24,44 @@ from models import (
 )
 from schemas import BookSchema, AuthorSchema
 
+WSGIRequestHandler.protocol_version = "HTTP/1.1"
+
 app = Flask(__name__)
 api = Api(app)
 
+spec = APISpec(
+    title="BooksList",
+    version="1.0.0",
+    openapi_version="2.0",
+    plugins={
+        FlaskPlugin(),
+        MarshmallowPlugin(),
+    },
+)
+
 
 class BookList(Resource):
+    """Resource class for handling book-related operations."""
+
     @staticmethod
     def get() -> tuple[list[dict], int]:
+        """
+        Handle GET request to fetch a list of all books.
+        :return: tuple containing a list of dictionaries
+        representing books and an HTTP status code
+        """
+
         schema = BookSchema()
         return schema.dump(get_all_books(), many=True), 200
 
     @staticmethod
     def post() -> tuple[dict, int]:
+        """
+        Handle POST request to add a new book.
+        :return: tuple containing a dictionary representing
+        the added book and an HTTP status code.
+        """
+
         data = request.json
         schema = BookSchema()
         try:
@@ -55,8 +85,18 @@ class BookList(Resource):
 
 
 class SelectedBook(Resource):
+    """Resource class for handling operations
+    related to a single selected book."""
+
     @staticmethod
     def get(book_id: int) -> tuple[dict, int]:
+        """
+        Handle GET request to retrieve details of a specific book.
+        :param book_id: the ID of the book to retrieve
+        :return: tuple containing a dictionary representing
+        the book and an HTTP status code
+        """
+
         book = get_book_by_id(book_id)
         if book:
             schema = BookSchema()
@@ -65,6 +105,13 @@ class SelectedBook(Resource):
 
     @staticmethod
     def put(book_id: int):
+        """
+        Handle PUT request to update details of a specific book.
+        :param book_id: the ID of the book to update
+        :return: tuple containing a dictionary representing
+        the updated book and an HTTP status code
+        """
+
         data = request.json
         schema = BookSchema()
 
@@ -85,6 +132,13 @@ class SelectedBook(Resource):
 
     @staticmethod
     def delete(book_id: int) -> tuple[dict, int]:
+        """
+        Handle DELETE request to delete a specific book.
+        :param book_id: the ID of the book to delete
+        :return: tuple containing a dictionary with a deletion
+        message and an HTTP status code
+        """
+
         book = get_book_by_id(book_id)
         if book:
             delete_book_by_id(book_id)
@@ -93,8 +147,17 @@ class SelectedBook(Resource):
 
 
 class SelectedAuthor(Resource):
+    """Resource class for handling operations
+    related to a single selected author."""
+
     @staticmethod
     def post():
+        """
+        Handle POST request to add a new author.
+        :return: tuple containing a dictionary representing
+        the added author and an HTTP status code
+        """
+
         data = request.json
         schema = AuthorSchema()
         try:
@@ -107,6 +170,13 @@ class SelectedAuthor(Resource):
 
     @staticmethod
     def get(author_id: int) -> tuple[dict, int]:
+        """
+        Handle GET request to retrieve books written by a specific author.
+        :param author_id: the ID of the source author
+        :return: tuple containing a list of dictionaries
+        representing books and an HTTP status code
+        """
+
         books: Optional[List[Book]] = get_all_books_by_author_id(author_id)
         if books:
             schema = BookSchema()
@@ -115,12 +185,25 @@ class SelectedAuthor(Resource):
 
     @staticmethod
     def delete(author_id: int):
+        """
+        Handle DELETE request to delete a specific author.
+        :param author_id: the ID of the author to delete
+        :return: tuple containing a dictionary with a
+        deletion message and an HTTP status code
+        """
+
         author = get_author_by_id(author_id)
         if author:
             delete_author_by_author_id(author_id)
             return {"message": "Author was successfully deleted"}, 200
         return {"message": "Author not found"}, 404
 
+
+# template = spec.to_flasgger(
+#     app,
+#     definitions=[BookSchema],
+# )
+swagger = Swagger(app, template_file="specification.yaml")
 
 api.add_resource(BookList, '/api/books')
 api.add_resource(SelectedBook, '/api/books/<int:book_id>')
