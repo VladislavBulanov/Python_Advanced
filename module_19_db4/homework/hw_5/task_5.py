@@ -94,22 +94,45 @@ def find_amount_of_overdue_in_each_group(cur: sqlite3.Cursor) -> None:
 
 
 def find_amount_of_repeated_attempts_in_each_group(cur: sqlite3.Cursor) -> None:
-    """A function prints the amount of students in each
-    group who have submitted the work several times."""
+    """A function prints the amount of repeated attempts to submit the work."""
 
     cur.execute(
         """
-        
+        SELECT
+            s.group_id AS group_id,
+            COUNT(repeated_attempts.assignment_id) / 2 AS repeated_attempts
+        FROM assignments_grades ag
+        -- Join results with students to know students groups:
+        JOIN students s
+            ON ag.student_id  = s.student_id
+        -- Join with subtable to find all cases of several attempts:
+        LEFT JOIN (
+            -- Find cases when student submitted the work several times:
+            SELECT
+                assignment_id,
+                student_id
+            FROM
+                assignments_grades
+            GROUP BY
+                assignment_id,
+                student_id
+            HAVING
+                COUNT(*) > 1
+        ) AS repeated_attempts
+        ON ag.assignment_id = repeated_attempts.assignment_id
+            AND s.student_id = repeated_attempts.student_id
+        GROUP BY s.group_id;
         """
     )
     result = cur.fetchall()
-    print("\n===== КОЛ-ВО СТУДЕНТОВ, ПОВТОРНО СДАВАВШИХ РАБОТУ =====")
+    print("\n===== КОЛ-ВО ПОВТОРНЫХ ПОПЫТОК СДАТЬ РАБОТУ =====")
     print("\t\t№\t\tКол-во")
     for row in result:
         print(f"\t\t{row[0]}\t\t{row[1]}")
 
 
 if __name__ == "__main__":
+    print("========== ОТЧЁТ О ГРУППАХ ==========")
     with sqlite3.connect("../../homework.db") as conn:
         cursor = conn.cursor()
         find_amount_of_students_in_each_group(cursor)
