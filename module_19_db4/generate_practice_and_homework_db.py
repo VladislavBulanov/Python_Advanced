@@ -25,7 +25,7 @@ CREATE TABLE 'students' (
 
 DROP TABLE IF EXISTS 'assignments';
 CREATE TABLE 'assignments' (
-    assisgnment_id INTEGER PRIMARY KEY,
+    assignment_id INTEGER PRIMARY KEY,
     teacher_id REFERENCES teachers(teacher_id),
     due_date varchar(255),
     group_id INTEGER REFERENCES students_groups(group_id),
@@ -35,7 +35,7 @@ CREATE TABLE 'assignments' (
 DROP TABLE IF EXISTS 'assignments_grades';
 CREATE TABLE 'assignments_grades' (
     grade_id INTEGER PRIMARY KEY,
-    assisgnment_id INTEGER REFERENCES assignments(assisgnment_id),
+    assignment_id INTEGER REFERENCES assignments(assignment_id),
     student_id INTEGER REFERENCES students(student_id),
     grade INTEGER,
     date varchar(255)
@@ -124,7 +124,7 @@ assignment_nouns = """алгоритмы и структуры данных
 виноградники в Англии
 путешествия во времени
 быстродействие исчислений на счетах
-классику киноч
+классика кино
 основы программирования
 базы данных
 язык запросов SQL
@@ -196,7 +196,7 @@ def generate_database():
         ]
         conn.executemany(
             """
-            INSERT INTO 'assignments_grades'(assisgnment_id, student_id, grade, date)
+            INSERT INTO 'assignments_grades'(assignment_id, student_id, grade, date)
             VALUES(?, ?, ?, ?)
             """,
             assignments_grades
