@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
 from sqlalchemy.exc import NoResultFound
 from typing import List
@@ -8,7 +8,6 @@ from models import (
     engine,
     session,
     Books,
-    Authors,
     Readers,
     ReceivingBooks,
 )
@@ -39,6 +38,56 @@ def get_all_books() -> tuple:
         books_json: List[dict] = [book.to_json() for book in all_books]
         return jsonify(books_json), 200
     return "No books in library", 404
+
+
+@app.route("/books/delinquent_readers", methods=["GET"])
+def get_delinquent_readers() -> tuple:
+    """
+    Endpoint for retrieving a list of delinquent readers who have books
+    for more than 14 days.
+    :returns: a JSON response containing a list of delinquent readers
+    and HTTP response status code.
+    """
+
+    try:
+        # Calculate the date 14 days ago from the current date:
+        fourteen_days_ago_date = datetime.now() - timedelta(days=14)
+
+        # Query the 'receiving_books table' to find records
+        # where 'date_of_issue' is more than 14 days ago:
+        delinquent_records = session.query(ReceivingBooks).filter(
+            ReceivingBooks.date_of_issue <= fourteen_days_ago_date,
+            ReceivingBooks.date_of_return == None,
+        ).all()
+
+        if not delinquent_records:
+            return "No delinquent readers found", 404
+
+        # Collect the list of delinquent readers:
+        delinquent_readers = []
+        for record in delinquent_records:
+
+            reader = session.query(Readers).filter_by(
+                reader_id=record.student_id,
+            ).first()
+
+            if reader:
+                delinquent_readers.append(
+                    {
+                        "reader_id": reader.reader_id,
+                        "name": reader.name,
+                        "surname": reader.surname,
+                        "book_id": record.book_id,
+                        "days_overdue": (
+                                datetime.now() - record.date_of_issue
+                        ).days,
+                    }
+                )
+
+        return jsonify(delinquent_readers), 200
+
+    except Exception as exc:
+        return str(exc), 500
 
 
 @app.route("/books/issuing_book", methods=["POST"])
