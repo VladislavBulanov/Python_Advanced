@@ -1,0 +1,164 @@
+{
+	"info": {
+		"_postman_id": "bbdd4d07-8956-4c7c-b94c-65c64a91d21a",
+		"name": "library",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27491657"
+	},
+	"item": [
+		{
+			"name": "Issuing book",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"book_id\": 8,\n    \"student_id\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/books/issuing_book",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"books",
+						"issuing_book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieving all books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieving delinquent readers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/books/delinquent_readers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"books",
+						"delinquent_readers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Searching by title",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/books/searching_by_title?title=H",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"books",
+						"searching_by_title"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "H"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submitting book",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"book_id\": 6,\n    \"student_id\": 1\n}"
+				},
+				"url": {
+					"raw": "{{url}}/books/submitting_book",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"books",
+						"submitting_book"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		}
+	]
+}
