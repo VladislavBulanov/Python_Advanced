@@ -195,5 +195,40 @@ def submit_book_to_library() -> tuple:
         return str(exc), 500
 
 
+@app.route("/books/searching_by_title", methods=["GET"])
+def search_books_by_title() -> tuple:
+    """
+    Endpoint for searching books by title.
+    This endpoint receives a query parameter 'title'
+    and returns a JSON response containing a list of
+    books whose titles contain the specified keyword.
+    :returns: a JSON response with a list of matching
+    books and HTTP status code.
+    """
+
+    try:
+        title = request.args.get("title")
+
+        if title is None:
+            return "Field 'title' is required", 404
+
+        # Query the 'books' table to find books
+        # with titles containing the keyword:
+        matching_books = session.query(Books).filter(
+            Books.name.like(f"%{title}%"),
+        ).all()
+
+        if not matching_books:
+            return "No matching books found", 404
+
+        # Convert matching books to JSON format:
+        matching_books_json = [book.to_json() for book in matching_books]
+
+        return jsonify(matching_books_json), 200
+
+    except Exception as exc:
+        return str(exc), 500
+
+
 if __name__ == "__main__":
     app.run(debug=True)
